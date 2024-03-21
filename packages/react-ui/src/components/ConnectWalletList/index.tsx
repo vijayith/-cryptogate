@@ -12,72 +12,80 @@ export const ConnectWalletList = ({
 }) => {
   const { ethConfig, solConfig, suiConfig } = useConfig();
 
+  const handleWalletClick = () => {
+    setOpenOptions(false);
+  };
+
   return (
-    <>
+    <div
+      style={{
+        display: openOptions ? "block" : "none",
+        position: "fixed",
+        zIndex: 1000,
+        left: 0,
+        top: 0,
+        width: "100%",
+        height: "100%",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        overflow: "auto",
+      }}
+    >
       <div
         style={{
-          width: 270,
-          top: 0,
-          backgroundColor: "white",
-          transition: "0.5s",
-          zIndex: 10001,
-          position: "fixed",
-          right: !openOptions ? -270 : 0,
-          maxHeight: "100%",
-          overflowY: "auto",
-          borderTopLeftRadius: "5px",
-          borderBottomLeftRadius: "5px",
-          boxShadow: "1px 1px 2px 2px #888888",
+          backgroundColor: "#fefefe",
+          margin: "10% auto",
+          padding: "20px 0",
+          border: "1px solid #888",
+          width: "80%",
+          maxWidth: "500px",
+          borderRadius: "16px",
+          position: "relative",
         }}
       >
+        <div style={{ padding: "10px 15px", borderBottom: "1px solid #ddd", position: "relative" }}>
+          <h2 style={{ color: "black", fontWeight: "bold", display: "inline-block" }}>
+            Connect a Wallet
+          </h2>
+          <span
+            style={{
+              color: "#aaa",
+              position: "absolute",
+              top: "10px",
+              right: "15px",
+              fontSize: "28px",
+              fontWeight: "bold",
+              cursor: "pointer",
+              lineHeight: "24px"
+            }}
+            onClick={() => setOpenOptions(false)}
+          >
+            &times;
+          </span>
+        </div>
+        <div style={{ padding: "15px", maxHeight: "300px", overflowY: "auto" }}>
+          {ethConfig?.wallets && (
+            <EvmWalletListComp wallets={ethConfig.wallets} closeWallet={handleWalletClick} />
+          )}
+          {solConfig?.wallets && (
+            <SolWalletListComp wallets={solConfig.wallets} closeWallet={handleWalletClick} />
+          )}
+          {suiConfig?.wallets && (
+            <SuiWalletListComp wallets={suiConfig.wallets} closeWallet={handleWalletClick} />
+          )}
+        </div>
         <div
           style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            paddingLeft: "15px",
-            paddingRight: "15px",
-            paddingTop: "10px",
-            maxHeight: "100%",
-            overflowY: "auto",
+            padding: "10px 15px",
+            borderTop: "1px solid #ddd",
+            textAlign: "left",
+            fontSize: "13px",
+            lineHeight: "16px",
           }}
-          onClick={() => setOpenOptions(false)}
         >
-          <div style={{ marginRight: 10 }}>
-            <p
-              style={{
-                fontSize: "14px",
-                color: "black",
-              }}
-            >
-              Connect with one of the available wallet providers.
-            </p>
-            <br />
-            {ethConfig?.wallets && (
-              <EvmWalletListComp wallets={ethConfig.wallets} />
-            )}
-            {solConfig?.wallets && (
-              <SolWalletListComp wallets={solConfig.wallets} />
-            )}
-            {suiConfig?.wallets && (
-              <SuiWalletListComp wallets={suiConfig.wallets} />
-            )}
-          </div>
+          By Connecting your wallet you agree to our{" "}
+          <span style={{ color: "black", fontWeight: "bold" }}>terms and conditions and our privacy policy</span>
         </div>
       </div>
-      {openOptions && (
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            background: "transparent",
-            zIndex: 10000,
-            position: "fixed",
-            left: 0,
-          }}
-          onClick={() => setOpenOptions(false)}
-        />
-      )}
-    </>
+    </div>
   );
 };

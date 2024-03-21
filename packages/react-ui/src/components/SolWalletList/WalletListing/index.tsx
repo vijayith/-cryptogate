@@ -1,6 +1,5 @@
 import { Adapter } from "@solana/wallet-adapter-base";
 import { WalletIcon } from "@solana/wallet-adapter-react-ui";
-import React from "react";
 
 const WalletListing = ({
   wallet,
@@ -18,11 +17,12 @@ const WalletListing = ({
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        borderBottom: "black 1px solid",
+        //borderBottom: "black 1px solid",
         padding: "15px",
       }}
       onClick={onWalletCall}
     >
+
       <span style={{ paddingRight: "15px" }}>
         <WalletIcon
           style={{ width: "22px", height: "22px" }}

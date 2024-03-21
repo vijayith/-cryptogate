@@ -3,25 +3,17 @@ import { SolWallets, useSolana } from "@cryptogate/react-providers";
 import {
   PhantomWalletAdapter,
   PhantomWalletName,
-  SlopeWalletAdapter,
-  SlopeWalletName,
   SolflareWalletAdapter,
+  SolongWalletAdapter,
   SolflareWalletName,
-  SolletExtensionWalletAdapter,
-  SolletWalletName,
 } from "@solana/wallet-adapter-wallets";
 
-const SolWalletListComp = ({ wallets }: { wallets: SolWallets[] }) => {
+const SolWalletListComp = ({ wallets, closeWallet }: { wallets: SolWallets[]; closeWallet: () => void; }) => {
   const { select } = useSolana();
 
   return (
     <div
       style={{
-        borderLeft: "black 1px solid",
-        borderTop: "black 1px solid",
-        borderRight: "black 1px solid",
-        borderTopLeftRadius: "8px",
-        borderTopRightRadius: "8px",
         marginBottom: "20px",
       }}
     >
@@ -30,16 +22,10 @@ const SolWalletListComp = ({ wallets }: { wallets: SolWallets[] }) => {
         <WalletListing
           heading="Phantom"
           wallet={new PhantomWalletAdapter()}
-          onWalletCall={() => select(PhantomWalletName)}
-        />
-      )}
-
-      {(wallets.indexOf(SolWallets.ALL) > -1 ||
-        wallets.indexOf(SolWallets.SLOPE) > -1) && (
-        <WalletListing
-          heading="Slope"
-          wallet={new SlopeWalletAdapter()}
-          onWalletCall={() => select(SlopeWalletName)}
+          onWalletCall={() => {
+            select(PhantomWalletName);
+            closeWallet();
+          }}
         />
       )}
 
@@ -48,16 +34,22 @@ const SolWalletListComp = ({ wallets }: { wallets: SolWallets[] }) => {
         <WalletListing
           heading="Solflare"
           wallet={new SolflareWalletAdapter()}
-          onWalletCall={() => select(SolflareWalletName)}
+          onWalletCall={() => {
+            select(SolflareWalletName);
+            closeWallet();
+          }}
         />
       )}
 
       {(wallets.indexOf(SolWallets.ALL) > -1 ||
-        wallets.indexOf(SolWallets.SOLLETEXTENSION) > -1) && (
+        wallets.indexOf(SolWallets.SOLFLARE) > -1) && (
         <WalletListing
-          heading="Sollet"
-          wallet={new SolletExtensionWalletAdapter()}
-          onWalletCall={() => select(SolletWalletName)}
+          heading="Solong"
+          wallet={new SolongWalletAdapter()}
+          onWalletCall={() => {
+            select(SolflareWalletName);
+            closeWallet();
+          }}
         />
       )}
     </div>

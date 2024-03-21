@@ -25,7 +25,9 @@
   "dependencies": {
     "@cryptogate/core": "*",
     "@cryptogate/react-providers": "^2.0.53",
+    "@ethersproject/providers": "^5.7.2",
     "bignumber.js": "*",
+    "ethers": "^6.11.1",
     "react-device-detect": "^2.2.2",
     "react-jazzicon": "^1.0.3",
     "react-slick": "^0.29.0",
@@ -47,6 +49,6 @@
     "rollup-plugin-import-css": "",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-svg": "^2.0.0",
-    "typescript": "^4.7.0-dev.20220416"
+    "typescript": "^5.4.2"
   }
 }

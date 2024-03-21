@@ -16,7 +16,7 @@ const WalletListing = ({
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        borderBottom: "black 1px solid",
+       // borderBottom: "black 1px solid",
         padding: "15px",
       }}
       onClick={onWalletCall}

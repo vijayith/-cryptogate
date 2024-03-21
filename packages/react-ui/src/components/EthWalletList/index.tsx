@@ -6,7 +6,7 @@ import Brave from "../wallets/Brave";
 import Coinbase from "../wallets/Coinbase";
 import WalletConnect from "../wallets/WalletConnect";
 
-const EvmWalletListComp = ({ wallets }: { wallets: EvmWallets[] }) => {
+const EvmWalletListComp = ({ wallets, closeWallet }: { wallets: EvmWallets[]; closeWallet: () => void; }) => {
   const {
     activateBraveWallet,
     activateMetamaskWallet,
@@ -18,58 +18,68 @@ const EvmWalletListComp = ({ wallets }: { wallets: EvmWallets[] }) => {
   return (
     <div
       style={{
-        borderLeft: "black 1px solid",
-        borderTop: "black 1px solid",
-        borderRight: "black 1px solid",
-        borderTopLeftRadius: "8px",
-        borderTopRightRadius: "8px",
         marginBottom: "20px",
       }}
     >
       {(wallets.indexOf(EvmWallets.ALL) > -1 ||
         wallets.indexOf(EvmWallets.SHABAKAT) > -1) && (
-        <WalletListing
-          heading="Shabakat"
-          Icon={<Shabakat />}
-          onWalletCall={activateShabakatWallet}
-        />
-      )}
+          <WalletListing
+            heading="Shabakat"
+            Icon={<Shabakat />}
+            onWalletCall={() => {
+              activateShabakatWallet();
+              closeWallet();
+            }}
+          />
+        )}
 
       {(wallets.indexOf(EvmWallets.ALL) > -1 ||
         wallets.indexOf(EvmWallets.METAMASK) > -1) && (
-        <WalletListing
-          heading="Metamask"
-          Icon={<Metamask />}
-          onWalletCall={activateMetamaskWallet}
-        />
-      )}
+          <WalletListing
+            heading="Metamask"
+            Icon={<Metamask />}
+            onWalletCall={() => {
+              activateMetamaskWallet();
+              closeWallet();
+            }}
+          />
+        )}
 
       {(wallets.indexOf(EvmWallets.ALL) > -1 ||
         wallets.indexOf(EvmWallets.BRAVEWALLET) > -1) && (
-        <WalletListing
-          heading="Brave Wallet"
-          Icon={<Brave />}
-          onWalletCall={activateBraveWallet}
-        />
-      )}
+          <WalletListing
+            heading="Brave Wallet"
+            Icon={<Brave />}
+            onWalletCall={() => {
+              activateBraveWallet();
+              closeWallet();
+            }}
+          />
+        )}
 
       {(wallets.indexOf(EvmWallets.ALL) > -1 ||
         wallets.indexOf(EvmWallets.COINBASE) > -1) && (
-        <WalletListing
-          heading="Coinbase"
-          Icon={<Coinbase />}
-          onWalletCall={activateCoinbaseWallet}
-        />
-      )}
+          <WalletListing
+            heading="Coinbase"
+            Icon={<Coinbase />}
+            onWalletCall={() => {
+              activateCoinbaseWallet();
+              closeWallet();
+            }}
+          />
+        )}
 
       {(wallets.indexOf(EvmWallets.ALL) > -1 ||
         wallets.indexOf(EvmWallets.WALLETCONNECT) > -1) && (
-        <WalletListing
-          heading="Wallet Connect"
-          Icon={<WalletConnect />}
-          onWalletCall={activateWalletConnect}
-        />
-      )}
+          <WalletListing
+            heading="Wallet Connect"
+            Icon={<WalletConnect />}
+            onWalletCall={() => {
+              activateWalletConnect();
+              closeWallet();
+            }}
+          />
+        )}
     </div>
   );
 };

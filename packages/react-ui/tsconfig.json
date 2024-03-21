@@ -16,12 +16,11 @@
     "noImplicitAny": true,
     "target": "es5",
     "strictNullChecks": true,
-    "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
   },
   "include": ["src"],
   "exclude": [

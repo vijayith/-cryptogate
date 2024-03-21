@@ -1,40 +1,53 @@
 import WalletListing from "./WalletListing";
 import { SuiWallets, useSui } from "@cryptogate/react-providers";
+import Suiet from "../wallets/Suiet";
+import Ethos from "../wallets/Ethos";
+import Sui from "../wallets/Sui";
 
-const SuiWalletListComp = ({ wallets }: { wallets: SuiWallets[] }) => {
+const SuiWalletListComp = ({ wallets, closeWallet }: { wallets: SuiWallets[]; closeWallet: () => void; }) => {
   const { select } = useSui();
 
   return (
     <div
       style={{
-        borderLeft: "black 1px solid",
-        borderTop: "black 1px solid",
-        borderRight: "black 1px solid",
-        borderTopLeftRadius: "8px",
-        borderTopRightRadius: "8px",
         marginBottom: "20px",
       }}
     >
       {(wallets.indexOf(SuiWallets.ALL) > -1 ||
         wallets.indexOf(SuiWallets.SUIET) > -1) && (
-        <WalletListing heading="Suiet" onWalletCall={() => select("Suiet")} />
-      )}
+          <WalletListing
+            heading="Suiet"
+            Icon={<Suiet />}
+            onWalletCall={() => {
+              select("Suiet");
+              closeWallet();
+            }}
+          />
+        )}
 
       {(wallets.indexOf(SuiWallets.ALL) > -1 ||
         wallets.indexOf(SuiWallets.SUI) > -1) && (
-        <WalletListing
-          heading="Sui Wallet"
-          onWalletCall={() => select("Sui Wallet")}
-        />
-      )}
+          <WalletListing
+            heading="Sui Wallet"
+            Icon={<Sui />}
+            onWalletCall={() => {
+              select("Sui Wallet");
+              closeWallet();
+            }}
+          />
+        )}
 
       {(wallets.indexOf(SuiWallets.ALL) > -1 ||
         wallets.indexOf(SuiWallets.ETHOS) > -1) && (
-        <WalletListing
-          heading="Ethos"
-          onWalletCall={() => select("Ethos Wallet")}
-        />
-      )}
+          <WalletListing
+            heading="Ethos"
+            Icon={<Ethos />}
+            onWalletCall={() => {
+              select("Ethos Wallet");
+              closeWallet();
+            }}
+          />
+        )}
     </div>
   );
 };

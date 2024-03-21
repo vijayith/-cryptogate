@@ -1,7 +1,9 @@
 const WalletListing = ({
+  Icon,
   heading,
   onWalletCall,
 }: {
+  Icon: React.ReactNode;
   heading: any;
   onWalletCall: any;
 }) => {
@@ -12,11 +14,13 @@ const WalletListing = ({
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        borderBottom: "black 1px solid",
+        // borderBottom: "black 1px solid",
         padding: "15px",
       }}
       onClick={onWalletCall}
     >
+      <span style={{ paddingRight: "15px" }}>{Icon}</span>
+      
       <h6
         style={{
           margin: "0",

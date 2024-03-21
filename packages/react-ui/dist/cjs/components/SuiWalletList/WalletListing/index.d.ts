@@ -1,5 +1,6 @@
 /// <reference types="react" />
-declare const WalletListing: ({ heading, onWalletCall, }: {
+declare const WalletListing: ({ Icon, heading, onWalletCall, }: {
+    Icon: React.ReactNode;
     heading: any;
     onWalletCall: any;
 }) => JSX.Element;
