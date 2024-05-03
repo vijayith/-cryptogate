@@ -640,7 +640,7 @@ var ConnectWalletButton = function (_a) {
         }, children: ActiveComponent }));
 };
 
-var WalletListing$2 = function (_a) {
+var WalletListing$1 = function (_a) {
     var Icon = _a.Icon, heading = _a.heading, onWalletCall = _a.onWalletCall;
     return (jsxRuntime.jsxs("div", { style: {
             cursor: "pointer",
@@ -683,29 +683,29 @@ var EvmWalletListComp = function (_a) {
     return (jsxRuntime.jsxs("div", { style: {
             marginBottom: "20px",
         }, children: [(wallets.indexOf(reactProviders.EvmWallets.ALL) > -1 ||
-                wallets.indexOf(reactProviders.EvmWallets.SHABAKAT) > -1) && (jsxRuntime.jsx(WalletListing$2, { heading: "Shabakat", Icon: jsxRuntime.jsx(Shabakat, {}), onWalletCall: function () {
+                wallets.indexOf(reactProviders.EvmWallets.SHABAKAT) > -1) && (jsxRuntime.jsx(WalletListing$1, { heading: "Shabakat", Icon: jsxRuntime.jsx(Shabakat, {}), onWalletCall: function () {
                     activateShabakatWallet();
                     closeWallet();
                 } })), (wallets.indexOf(reactProviders.EvmWallets.ALL) > -1 ||
-                wallets.indexOf(reactProviders.EvmWallets.METAMASK) > -1) && (jsxRuntime.jsx(WalletListing$2, { heading: "Metamask", Icon: jsxRuntime.jsx(Metamask, {}), onWalletCall: function () {
+                wallets.indexOf(reactProviders.EvmWallets.METAMASK) > -1) && (jsxRuntime.jsx(WalletListing$1, { heading: "Metamask", Icon: jsxRuntime.jsx(Metamask, {}), onWalletCall: function () {
                     activateMetamaskWallet();
                     closeWallet();
                 } })), (wallets.indexOf(reactProviders.EvmWallets.ALL) > -1 ||
-                wallets.indexOf(reactProviders.EvmWallets.BRAVEWALLET) > -1) && (jsxRuntime.jsx(WalletListing$2, { heading: "Brave Wallet", Icon: jsxRuntime.jsx(Brave, {}), onWalletCall: function () {
+                wallets.indexOf(reactProviders.EvmWallets.BRAVEWALLET) > -1) && (jsxRuntime.jsx(WalletListing$1, { heading: "Brave Wallet", Icon: jsxRuntime.jsx(Brave, {}), onWalletCall: function () {
                     activateBraveWallet();
                     closeWallet();
                 } })), (wallets.indexOf(reactProviders.EvmWallets.ALL) > -1 ||
-                wallets.indexOf(reactProviders.EvmWallets.COINBASE) > -1) && (jsxRuntime.jsx(WalletListing$2, { heading: "Coinbase", Icon: jsxRuntime.jsx(Coinbase, {}), onWalletCall: function () {
+                wallets.indexOf(reactProviders.EvmWallets.COINBASE) > -1) && (jsxRuntime.jsx(WalletListing$1, { heading: "Coinbase", Icon: jsxRuntime.jsx(Coinbase, {}), onWalletCall: function () {
                     activateCoinbaseWallet();
                     closeWallet();
                 } })), (wallets.indexOf(reactProviders.EvmWallets.ALL) > -1 ||
-                wallets.indexOf(reactProviders.EvmWallets.WALLETCONNECT) > -1) && (jsxRuntime.jsx(WalletListing$2, { heading: "Wallet Connect", Icon: jsxRuntime.jsx(WalletConnect, {}), onWalletCall: function () {
+                wallets.indexOf(reactProviders.EvmWallets.WALLETCONNECT) > -1) && (jsxRuntime.jsx(WalletListing$1, { heading: "Wallet Connect", Icon: jsxRuntime.jsx(WalletConnect, {}), onWalletCall: function () {
                     activateWalletConnect();
                     closeWallet();
                 } }))] }));
 };
 
-var WalletListing$1 = function (_a) {
+var WalletListing = function (_a) {
     var wallet = _a.wallet, heading = _a.heading, onWalletCall = _a.onWalletCall;
     return (jsxRuntime.jsxs("div", { style: {
             cursor: "pointer",
@@ -728,72 +728,23 @@ var SolWalletListComp = function (_a) {
     return (jsxRuntime.jsxs("div", { style: {
             marginBottom: "20px",
         }, children: [(wallets.indexOf(reactProviders.SolWallets.ALL) > -1 ||
-                wallets.indexOf(reactProviders.SolWallets.PHANTOM) > -1) && (jsxRuntime.jsx(WalletListing$1, { heading: "Phantom", wallet: new walletAdapterWallets.PhantomWalletAdapter(), onWalletCall: function () {
+                wallets.indexOf(reactProviders.SolWallets.PHANTOM) > -1) && (jsxRuntime.jsx(WalletListing, { heading: "Phantom", wallet: new walletAdapterWallets.PhantomWalletAdapter(), onWalletCall: function () {
                     select(walletAdapterWallets.PhantomWalletName);
                     closeWallet();
                 } })), (wallets.indexOf(reactProviders.SolWallets.ALL) > -1 ||
-                wallets.indexOf(reactProviders.SolWallets.SOLFLARE) > -1) && (jsxRuntime.jsx(WalletListing$1, { heading: "Solflare", wallet: new walletAdapterWallets.SolflareWalletAdapter(), onWalletCall: function () {
+                wallets.indexOf(reactProviders.SolWallets.SOLFLARE) > -1) && (jsxRuntime.jsx(WalletListing, { heading: "Solflare", wallet: new walletAdapterWallets.SolflareWalletAdapter(), onWalletCall: function () {
                     select(walletAdapterWallets.SolflareWalletName);
                     closeWallet();
                 } })), (wallets.indexOf(reactProviders.SolWallets.ALL) > -1 ||
-                wallets.indexOf(reactProviders.SolWallets.SOLFLARE) > -1) && (jsxRuntime.jsx(WalletListing$1, { heading: "Solong", wallet: new walletAdapterWallets.SolongWalletAdapter(), onWalletCall: function () {
+                wallets.indexOf(reactProviders.SolWallets.SOLFLARE) > -1) && (jsxRuntime.jsx(WalletListing, { heading: "Solong", wallet: new walletAdapterWallets.SolongWalletAdapter(), onWalletCall: function () {
                     select(walletAdapterWallets.SolflareWalletName);
-                    closeWallet();
-                } }))] }));
-};
-
-var WalletListing = function (_a) {
-    var Icon = _a.Icon, heading = _a.heading, onWalletCall = _a.onWalletCall;
-    return (jsxRuntime.jsxs("div", { style: {
-            cursor: "pointer",
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            // borderBottom: "black 1px solid",
-            padding: "15px",
-        }, onClick: onWalletCall, children: [jsxRuntime.jsx("span", { style: { paddingRight: "15px" }, children: Icon }), jsxRuntime.jsx("h6", { style: {
-                    margin: "0",
-                    padding: "0",
-                    color: "black",
-                    fontSize: "15px",
-                }, children: heading })] }));
-};
-
-var Suiet = function () {
-    return (jsxRuntime.jsxs("svg", { width: "25", height: "23", viewBox: "0 0 64 64", fill: "none", xmlns: "http://www.w3.org/2000/svg", children: [jsxRuntime.jsx("rect", { width: "64", height: "64", rx: "24", fill: "url(#paint0_radial_433_12879)" }), jsxRuntime.jsx("path", { d: "M47.3489 40.8893C44.099 40.8893 41.0991 37.6344 39.5492 35.6314C37.9992 37.6344 34.9993 40.8893 31.7494 40.8893C28.4995 40.8893 25.4996 37.6344 23.9497 35.6314C22.4997 37.6344 19.4998 40.8893 16.25 40.8893C15.55 40.8893 15 40.3385 15 39.6374C15 38.9363 15.55 38.3855 16.25 38.3855C18.8499 38.3855 22.0498 34.2292 22.9497 32.7771C23.1997 32.4265 23.5997 32.1761 23.9997 32.1761C24.3997 32.1761 24.8497 32.3764 25.0497 32.7771C25.9496 34.2292 29.1495 38.3855 31.7494 38.3855C34.3494 38.3855 37.5492 34.2292 38.4492 32.7771C38.6992 32.4265 39.0992 32.1761 39.4992 32.1761C39.9492 32.1761 40.3492 32.3764 40.5491 32.7771C41.4491 34.2292 44.649 38.3855 47.2489 38.3855C47.9489 38.3855 48.4989 38.9363 48.4989 39.6374C48.4989 40.3385 48.0489 40.8893 47.3489 40.8893Z", fill: "white" }), jsxRuntime.jsx("path", { d: "M47.3489 48C44.099 48 41.0991 44.7451 39.5492 42.7421C37.9992 44.7451 34.9993 48 31.7494 48C28.4995 48 25.4996 44.7451 23.9497 42.7421C22.4997 44.7451 19.4998 48 16.25 48C15.55 48 15 47.4492 15 46.7481C15 46.0471 15.55 45.4962 16.25 45.4962C18.8499 45.4962 22.0498 41.34 22.9497 39.8878C23.1997 39.5372 23.5997 39.2869 23.9997 39.2869C24.3997 39.2869 24.8497 39.4872 25.0497 39.8878C25.9496 41.34 29.1495 45.4962 31.7494 45.4962C34.3494 45.4962 37.5492 41.34 38.4492 39.8878C38.6992 39.5372 39.0992 39.2869 39.4992 39.2869C39.9492 39.2869 40.3492 39.4872 40.5491 39.8878C41.4491 41.34 44.649 45.4962 47.2489 45.4962C47.9489 45.4962 48.4989 46.0471 48.4989 46.7481C48.4989 47.4492 48.0489 48 47.3489 48Z", fill: "white" }), jsxRuntime.jsx("path", { d: "M17.0999 35.1807C16.4999 35.1807 16 34.7801 15.85 34.1792C15.7 33.1777 15.6 32.1762 15.6 31.2247C15.6 22.2612 22.8497 15.0003 31.7994 15.0003C40.7491 14.9502 47.9989 22.2612 47.9989 31.2247C47.9989 32.2262 47.8989 33.1777 47.7489 34.1291C47.6489 34.8302 46.9989 35.2808 46.2989 35.1306C45.599 35.0305 45.149 34.3795 45.299 33.6784C45.449 32.8772 45.499 32.0259 45.499 31.2247C45.499 23.6633 39.3492 17.504 31.7994 17.504C24.2497 17.504 18.0999 23.6132 18.0999 31.2247C18.0999 32.076 18.1999 32.9273 18.3499 33.7285C18.4499 34.4296 18.0499 35.0805 17.3499 35.1807C17.2499 35.1807 17.1499 35.1807 17.0999 35.1807Z", fill: "white" }), jsxRuntime.jsx("defs", { children: jsxRuntime.jsxs("radialGradient", { id: "paint0_radial_433_12879", cx: "0", cy: "0", r: "1", gradientUnits: "userSpaceOnUse", gradientTransform: "translate(-1.05128e-06 7.40741) rotate(43.8004) scale(64.4263 64.5285)", children: [jsxRuntime.jsx("stop", { "stop-color": "#0058DD" }), jsxRuntime.jsx("stop", { offset: "1", "stop-color": "#67C8FF" })] }) })] }));
-};
-
-var Ethos = function () {
-    return (jsxRuntime.jsxs("svg", { width: "25", height: "23", viewBox: "0 0 1200 1200", fill: "none", xmlns: "http://www.w3.org/2000/svg", children: [jsxRuntime.jsx("rect", { width: "377", height: "345", fill: "white" }), jsxRuntime.jsx("path", { d: "M370.257 343.221H725.19C754.019 343.221 777.388 366.938 777.388 396.194V807.72C777.388 836.978 754.018 860.694 725.19 860.694H370.256C341.428 860.694 318.058 836.978 318.058 807.72V396.194C318.058 366.938 341.428 343.221 370.257 343.221Z", fill: "black", "fill-opacity": "0.45" }), jsxRuntime.jsx("path", { d: "M377.376 347.227L627.674 465.423C642.4 472.377 651.816 487.364 651.816 503.846V930.292C651.816 960.957 620.716 981.471 593.102 969.02L342.804 856.161C327.721 849.361 318 834.183 318 817.433V385.65C318 354.665 349.695 334.155 377.376 347.227Z", fill: "#1A1C26" }), jsxRuntime.jsx("path", { d: "M854.916 196L860.143 210.125C872.455 243.4 898.691 269.635 931.966 281.948L946.091 287.175L931.966 292.401C898.691 304.714 872.455 330.95 860.143 364.225L854.916 378.349L849.689 364.225C837.376 330.95 811.141 304.714 777.866 292.401L763.741 287.175L777.866 281.948C811.141 269.635 837.376 243.4 849.689 210.125L854.916 196Z", fill: "#1A1C26" })] }));
-};
-
-var Sui = function () {
-    return (jsxRuntime.jsx("svg", { width: "25", height: "23", viewBox: "0 0 14 17", fill: "none", xmlns: "http://www.w3.org/2000/svg", children: jsxRuntime.jsx("path", { fillRule: "evenodd", clipRule: "evenodd", d: "M10.6026 7.36048L10.6023 7.36119C11.2607 8.17968 11.6542 9.2163 11.6542 10.3439C11.6542 11.4881 11.2489 12.5388 10.5728 13.3629L10.5146 13.4338L10.4991 13.3436C10.486 13.267 10.4706 13.1895 10.4527 13.1115C10.1143 11.6375 9.0118 10.3735 7.19723 9.35003C5.97191 8.66079 5.27054 7.83092 5.08639 6.88799C4.96745 6.27826 5.05586 5.66581 5.22674 5.14123C5.39758 4.61685 5.65166 4.17749 5.86755 3.91297L6.57354 3.05706C6.69736 2.90698 6.92898 2.90698 7.05279 3.05706L10.6026 7.36048ZM11.7191 6.50554L6.98806 0.769634C6.89769 0.660122 6.7286 0.660122 6.63827 0.769634L1.90704 6.50528L1.89177 6.52452C1.02114 7.59568 0.500122 8.95688 0.500122 10.4387C0.500122 13.8898 3.32649 16.6875 6.81315 16.6875C10.2998 16.6875 13.1262 13.8898 13.1262 10.4387C13.1262 8.95692 12.6051 7.59568 11.7345 6.52452L11.7191 6.50554ZM3.03907 7.34203L3.46244 6.82874L3.47523 6.92346C3.48536 6.99848 3.49764 7.0739 3.51221 7.14963C3.78602 8.57399 4.76416 9.76168 6.39952 10.6815C7.821 11.4836 8.64866 12.406 8.88714 13.4176C8.98661 13.8398 9.00436 14.2551 8.96128 14.6183L8.95859 14.6407L8.93811 14.6507C8.29649 14.9615 7.57526 15.1359 6.81301 15.1359C4.13937 15.1359 1.97185 12.9905 1.97185 10.3439C1.97185 9.20755 2.37142 8.16341 3.03907 7.34203Z", fill: "#000" }) }));
-};
-
-var SuiWalletListComp = function (_a) {
-    var wallets = _a.wallets, closeWallet = _a.closeWallet;
-    var select = reactProviders.useSui().select;
-    return (jsxRuntime.jsxs("div", { style: {
-            marginBottom: "20px",
-        }, children: [(wallets.indexOf(reactProviders.SuiWallets.ALL) > -1 ||
-                wallets.indexOf(reactProviders.SuiWallets.SUIET) > -1) && (jsxRuntime.jsx(WalletListing, { heading: "Suiet", Icon: jsxRuntime.jsx(Suiet, {}), onWalletCall: function () {
-                    select("Suiet");
-                    closeWallet();
-                } })), (wallets.indexOf(reactProviders.SuiWallets.ALL) > -1 ||
-                wallets.indexOf(reactProviders.SuiWallets.SUI) > -1) && (jsxRuntime.jsx(WalletListing, { heading: "Sui Wallet", Icon: jsxRuntime.jsx(Sui, {}), onWalletCall: function () {
-                    select("Sui Wallet");
-                    closeWallet();
-                } })), (wallets.indexOf(reactProviders.SuiWallets.ALL) > -1 ||
-                wallets.indexOf(reactProviders.SuiWallets.ETHOS) > -1) && (jsxRuntime.jsx(WalletListing, { heading: "Ethos", Icon: jsxRuntime.jsx(Ethos, {}), onWalletCall: function () {
-                    select("Ethos Wallet");
                     closeWallet();
                 } }))] }));
 };
 
 var ConnectWalletList = function (_a) {
     var openOptions = _a.openOptions, setOpenOptions = _a.setOpenOptions;
-    var _b = reactProviders.useConfig(), ethConfig = _b.ethConfig, solConfig = _b.solConfig, suiConfig = _b.suiConfig;
+    var _b = reactProviders.useConfig(), ethConfig = _b.ethConfig, solConfig = _b.solConfig; _b.suiConfig;
     var handleWalletClick = function () {
         setOpenOptions(false);
     };
@@ -825,7 +776,7 @@ var ConnectWalletList = function (_a) {
                                 fontWeight: "bold",
                                 cursor: "pointer",
                                 lineHeight: "24px"
-                            }, onClick: function () { return setOpenOptions(false); }, children: "\u00D7" })] }), jsxRuntime.jsxs("div", { style: { padding: "15px", maxHeight: "300px", overflowY: "auto" }, children: [(ethConfig === null || ethConfig === void 0 ? void 0 : ethConfig.wallets) && (jsxRuntime.jsx(EvmWalletListComp, { wallets: ethConfig.wallets, closeWallet: handleWalletClick })), (solConfig === null || solConfig === void 0 ? void 0 : solConfig.wallets) && (jsxRuntime.jsx(SolWalletListComp, { wallets: solConfig.wallets, closeWallet: handleWalletClick })), (suiConfig === null || suiConfig === void 0 ? void 0 : suiConfig.wallets) && (jsxRuntime.jsx(SuiWalletListComp, { wallets: suiConfig.wallets, closeWallet: handleWalletClick }))] }), jsxRuntime.jsxs("div", { style: {
+                            }, onClick: function () { return setOpenOptions(false); }, children: "\u00D7" })] }), jsxRuntime.jsxs("div", { style: { padding: "15px", maxHeight: "300px", overflowY: "auto" }, children: [(ethConfig === null || ethConfig === void 0 ? void 0 : ethConfig.wallets) && (jsxRuntime.jsx(EvmWalletListComp, { wallets: ethConfig.wallets, closeWallet: handleWalletClick })), (solConfig === null || solConfig === void 0 ? void 0 : solConfig.wallets) && (jsxRuntime.jsx(SolWalletListComp, { wallets: solConfig.wallets, closeWallet: handleWalletClick }))] }), jsxRuntime.jsxs("div", { style: {
                         padding: "10px 15px",
                         borderTop: "1px solid #ddd",
                         textAlign: "left",

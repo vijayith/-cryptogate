@@ -1128,8 +1128,12 @@ const writeContractCall = ({ abi, address, contract, method, }) => {
                 _address = address;
             }
             else if ((config === null || config === void 0 ? void 0 : config.ethConfig) && (network === null || network === void 0 ? void 0 : network.chainId)) {
+                console.log(config);
                 const contracts = (_a = config.ethConfig.contractList) === null || _a === void 0 ? void 0 : _a.filter((_contract) => _contract.name == contract);
+                console.log(contracts);
                 if (contracts && contracts.length) {
+                    console.log(contracts[0].abi);
+                    console.log(contracts[0].addresses[network.chainId]);
                     _abi = contracts[0].abi;
                     _address = contracts[0].addresses[network.chainId];
                 }
