@@ -1,3 +1,2 @@
-/// <reference types="react" />
-declare const DisconnectBtn: () => JSX.Element;
+declare const DisconnectBtn: () => import("react/jsx-runtime").JSX.Element;
 export default DisconnectBtn;

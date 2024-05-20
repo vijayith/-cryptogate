@@ -1,5 +1,4 @@
-/// <reference types="react" />
-import { ContractABIUnit, EvmAddress } from "@cryptogate/react-providers";
+import { ContractABIUnit, EvmAddress } from "ith-react-providers";
 import "./ReadMethodComponent.module.css";
 declare const ReadMethodComponent: ({ method, contractObj, methodData, }: {
     method: ContractABIUnit;
@@ -12,6 +11,6 @@ declare const ReadMethodComponent: ({ method, contractObj, methodData, }: {
             description: string;
             gasLimit: number;
         };
-    } | undefined;
-}) => JSX.Element;
+    };
+}) => import("react/jsx-runtime").JSX.Element;
 export default ReadMethodComponent;

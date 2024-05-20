@@ -1,2 +1,1 @@
-/// <reference types="react" />
-export declare const Active: () => JSX.Element;
+export declare const Active: () => import("react/jsx-runtime").JSX.Element;

@@ -6,7 +6,6 @@ import { SlopeWalletAdapter, SolflareWalletAdapter, SolletExtensionWalletAdapter
 import { WalletAdapterNetwork, WalletReadyState } from '@solana/wallet-adapter-base';
 import { clusterApiUrl } from '@solana/web3.js';
 import { WalletProvider as WalletProvider$2, useWallet as useWallet$2, useAccountBalance, useCoinBalance, useChain, useSuiProvider } from '@suiet/wallet-kit';
-import CoinbaseWalletSDK from '@coinbase/wallet-sdk';
 import { EthereumProvider } from '@walletconnect/ethereum-provider';
 
 const ConfigContext = React.createContext({ ethConfig: { defaultNetwork: undefined, readOnlyUrls: {} } });
@@ -677,16 +676,25 @@ const useEvm = () => {
         provider === null || provider === void 0 ? void 0 : provider.removeAllListeners();
         _provider && setProvider(new ethers.providers.Web3Provider(_provider));
     };
-    const activateWallet = (_provider) => __awaiter(void 0, void 0, void 0, function* () {
+    const activateWallet = (_provider, isCOinbase) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const res = yield _provider.send("eth_requestAccounts", []);
-            const chainIdRes = _provider.getChainId && typeof _provider.getChainId == "function"
-                ? _provider.getChainId()
-                : (yield _provider.send("eth_chainId", [])).result;
-            if (res.result)
-                setData(res.result[0], parseInt(chainIdRes), _provider);
-            else
+            if (isCOinbase) {
+                const res = yield _provider.request({
+                    method: "eth_requestAccounts", // Pass method as a property of an object
+                });
+                let chainIdRes = yield _provider.request({ method: "eth_chainId" });
                 setData(res[0], parseInt(chainIdRes), _provider);
+            }
+            else {
+                const res = yield _provider.send("eth_requestAccounts", []);
+                const chainIdRes = _provider.getChainId && typeof _provider.getChainId == "function"
+                    ? _provider.getChainId()
+                    : (yield _provider.send("eth_chainId", [])).result;
+                if (res.result)
+                    setData(res.result[0], parseInt(chainIdRes), _provider);
+                else
+                    setData(res[0], parseInt(chainIdRes), _provider);
+            }
         }
         catch (err) {
             addError(err);
@@ -707,12 +715,6 @@ const useEvm = () => {
     const activateCoinbaseWallet = React.useCallback(() => __awaiter(void 0, void 0, void 0, function* () {
         if (coinbase)
             activateWallet(coinbase);
-        // @Cryptogate: Might remove this later (handles popup if no extension found)
-        // appLogo is optional
-        else if (walletsConfig) {
-            const _coinbase = new CoinbaseWalletSDK(Object.assign({}, walletsConfig)).makeWeb3Provider();
-            activateWallet(_coinbase);
-        }
     }), [coinbase, walletsConfig]);
     const activateWalletConnect = () => __awaiter(void 0, void 0, void 0, function* () {
         const provider = yield EthereumProvider.init({
@@ -1101,12 +1103,8 @@ const writeContractCall = ({ abi, address, contract, method, }) => {
                 _address = address;
             }
             else if ((config === null || config === void 0 ? void 0 : config.ethConfig) && (network === null || network === void 0 ? void 0 : network.chainId)) {
-                console.log(config);
                 const contracts = (_a = config.ethConfig.contractList) === null || _a === void 0 ? void 0 : _a.filter((_contract) => _contract.name == contract);
-                console.log(contracts);
                 if (contracts && contracts.length) {
-                    console.log(contracts[0].abi);
-                    console.log(contracts[0].addresses[network.chainId]);
                     _abi = contracts[0].abi;
                     _address = contracts[0].addresses[network.chainId];
                 }

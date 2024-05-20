@@ -1,4 +1,4 @@
-import { useEvm } from "@cryptogate/react-providers";
+import { useEvm } from "ith-react-providers";
 import { NFT_CONTRACT_METHODS } from "../../../utils/constants";
 import {
   useNFTMetadataMultiCall,

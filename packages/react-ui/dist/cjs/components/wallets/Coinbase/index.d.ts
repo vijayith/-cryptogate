@@ -1,3 +1,2 @@
-/// <reference types="react" />
-declare const Coinbase: () => JSX.Element;
+declare const Coinbase: () => import("react/jsx-runtime").JSX.Element;
 export default Coinbase;

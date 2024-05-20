@@ -3,7 +3,7 @@ import {
   writeContractCall,
   ContractABIUnit,
   EvmAddress,
-} from "@cryptogate/react-providers";
+} from "ith-react-providers";
 import Loader from "../../Loader";
 import "./WriteMethodComponent.module.css";
 

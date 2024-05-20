@@ -1,7 +1,6 @@
-/// <reference types="react" />
-import { SuiWallets } from "@cryptogate/react-providers";
+import { SuiWallets } from "ith-react-providers";
 declare const SuiWalletListComp: ({ wallets, closeWallet }: {
     wallets: SuiWallets[];
     closeWallet: () => void;
-}) => JSX.Element;
+}) => import("react/jsx-runtime").JSX.Element;
 export default SuiWalletListComp;

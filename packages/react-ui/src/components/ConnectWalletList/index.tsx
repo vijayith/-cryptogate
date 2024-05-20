@@ -1,4 +1,4 @@
-import { useConfig } from "@cryptogate/react-providers";
+import { useConfig } from "ith-react-providers";
 import EvmWalletListComp from "../EthWalletList";
 import SolWalletListComp from "../SolWalletList";
 import SuiWalletListComp from "../SuiWalletList";

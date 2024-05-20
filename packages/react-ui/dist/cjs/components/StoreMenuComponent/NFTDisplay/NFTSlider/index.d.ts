@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import "./slick.css";
 import "./slick-theme.css";
 declare const index: ({ URIs, symbols, numbers, onCollectionSelected, }: {
@@ -6,5 +5,5 @@ declare const index: ({ URIs, symbols, numbers, onCollectionSelected, }: {
     symbols: any;
     numbers: any;
     onCollectionSelected: any;
-}) => JSX.Element;
+}) => import("react/jsx-runtime").JSX.Element;
 export default index;

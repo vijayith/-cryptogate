@@ -1,7 +1,6 @@
-/// <reference types="react" />
 import "./TokenDetails.module.css";
 declare const index: ({ tokens, nfts }: {
-    tokens?: string[] | undefined;
+    tokens?: string[];
     nfts: Boolean;
-}) => JSX.Element;
+}) => import("react/jsx-runtime").JSX.Element;
 export default index;

@@ -1,3 +1,2 @@
-/// <reference types="react" />
-declare const Shabakat: () => JSX.Element;
+declare const Shabakat: () => import("react/jsx-runtime").JSX.Element;
 export default Shabakat;

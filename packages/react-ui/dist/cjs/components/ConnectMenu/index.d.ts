@@ -1,4 +1,3 @@
-/// <reference types="react" />
 import { ConnectedMenuOptions } from "../ConnectWalletComponent";
 export declare const ConnectedMenu: ({ ChosenConnectedMenu, onClose, onDisconnect, isOpen, Store, }: {
     ChosenConnectedMenu: ConnectedMenuOptions;
@@ -6,7 +5,7 @@ export declare const ConnectedMenu: ({ ChosenConnectedMenu, onClose, onDisconnec
     isOpen: boolean;
     onDisconnect?: any;
     Store?: {
-        Tokens?: string[] | undefined;
-        NFTs?: string[] | undefined;
-    } | undefined;
-}) => JSX.Element;
+        Tokens?: string[];
+        NFTs?: string[];
+    };
+}) => import("react/jsx-runtime").JSX.Element;

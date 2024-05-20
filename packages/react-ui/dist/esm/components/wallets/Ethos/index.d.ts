@@ -1,3 +1,2 @@
-/// <reference types="react" />
-declare const Ethos: () => JSX.Element;
+declare const Ethos: () => import("react/jsx-runtime").JSX.Element;
 export default Ethos;

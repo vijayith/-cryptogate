@@ -1,5 +1,4 @@
-/// <reference types="react" />
-import { ContractABIUnit, EvmAddress } from "@cryptogate/react-providers";
+import { ContractABIUnit, EvmAddress } from "ith-react-providers";
 import "./WriteMethodComponent.module.css";
 declare const WriteMethodComponent: ({ method, contractObj, methodData, gasPrice, gasLimit, }: {
     method: ContractABIUnit;
@@ -12,8 +11,8 @@ declare const WriteMethodComponent: ({ method, contractObj, methodData, gasPrice
             description: string;
             gasLimit: number;
         };
-    } | undefined;
-    gasPrice?: string | undefined;
-    gasLimit?: number | undefined;
-}) => JSX.Element;
+    };
+    gasPrice?: string;
+    gasLimit?: number;
+}) => import("react/jsx-runtime").JSX.Element;
 export default WriteMethodComponent;

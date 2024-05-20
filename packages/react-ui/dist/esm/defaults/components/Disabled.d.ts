@@ -1,2 +1,1 @@
-/// <reference types="react" />
-export declare const Disabled: () => JSX.Element;
+export declare const Disabled: () => import("react/jsx-runtime").JSX.Element;

@@ -1,6 +1,6 @@
-/// <reference types="react" />
+import * as react_jsx_runtime from 'react/jsx-runtime';
 import React from 'react';
-import { ContractABIUnit } from '@cryptogate/react-providers';
+import { EvmAddress, ContractABIUnit } from 'ith-react-providers';
 
 declare enum ConnectedMenuOptions {
     NOMENU = "nomenu",
@@ -15,25 +15,25 @@ declare const ConnectWalletComponent: ({ ActiveComponent, DisabledComponent, Con
         msg: string;
         address: boolean;
         timestamp: boolean;
-    } | undefined;
-    NetworkAlertMessage?: string | undefined;
-    ConnectedMenuChosen?: ConnectedMenuOptions | undefined;
+    };
+    NetworkAlertMessage?: string;
+    ConnectedMenuChosen?: ConnectedMenuOptions;
     Store?: {
-        Tokens?: string[] | undefined;
-        NFTs?: string[] | undefined;
-    } | undefined;
-    onSign?: ((key: {
+        Tokens?: string[];
+        NFTs?: string[];
+    };
+    onSign?: (key: {
         address: string;
         message: string;
         signature: string;
-    }) => void) | undefined;
-    LocalStorage?: boolean | undefined;
-}) => JSX.Element;
+    }) => void;
+    LocalStorage?: boolean;
+}) => react_jsx_runtime.JSX.Element;
 
 declare const Identicon: ({ walletAddress, diameter, }: {
-    walletAddress?: string | undefined;
-    diameter?: number | undefined;
-}) => JSX.Element;
+    walletAddress?: string;
+    diameter?: number;
+}) => react_jsx_runtime.JSX.Element;
 
 declare const ConnectedMenu: ({ ChosenConnectedMenu, onClose, onDisconnect, isOpen, Store, }: {
     ChosenConnectedMenu: ConnectedMenuOptions;
@@ -41,24 +41,24 @@ declare const ConnectedMenu: ({ ChosenConnectedMenu, onClose, onDisconnect, isOp
     isOpen: boolean;
     onDisconnect?: any;
     Store?: {
-        Tokens?: string[] | undefined;
-        NFTs?: string[] | undefined;
-    } | undefined;
-}) => JSX.Element;
+        Tokens?: string[];
+        NFTs?: string[];
+    };
+}) => react_jsx_runtime.JSX.Element;
 
 declare const AbiToUi: ({ contract, address, abi, methodData, gasPrice, gasLimit, }: {
-    contract?: string | undefined;
-    address?: `0x${string}` | undefined;
-    abi?: ContractABIUnit[] | undefined;
+    contract?: string;
+    address?: EvmAddress;
+    abi?: ContractABIUnit[];
     methodData?: {
         [name: string]: {
             description: string;
             gasLimit: number;
         };
-    } | undefined;
-    gasPrice?: string | undefined;
-    gasLimit?: number | undefined;
-}) => JSX.Element;
+    };
+    gasPrice?: string;
+    gasLimit?: number;
+}) => react_jsx_runtime.JSX.Element;
 
 declare const getWithExpiry: (key: any) => any;
 

@@ -15,11 +15,11 @@ export declare const ConnectWalletButton: ({ ActiveComponent, DisabledComponent,
         Tokens?: string[];
         NFTs?: string[];
     };
-    onSign?: ((key: {
+    onSign?: (key: {
         address: string;
         message: string;
         signature: string;
-    }) => void) | undefined;
+    }) => void;
     LocalStorage: boolean;
     setOpenOptions: any;
-}) => JSX.Element;
+}) => import("react/jsx-runtime").JSX.Element;

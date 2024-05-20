@@ -1,4 +1,4 @@
-import { useEvm, useSolana, useSui } from "@cryptogate/react-providers";
+import { useEvm, useSolana, useSui } from "ith-react-providers";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 
 export const Identicon = ({

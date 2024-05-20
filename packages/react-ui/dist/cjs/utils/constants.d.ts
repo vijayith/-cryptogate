@@ -10,7 +10,7 @@ export declare const NFT_CONTRACT_METHODS: {
     TOKEN_OF_OWNER_BY_INDEX: string;
 };
 export declare const build_slider_settings: ({ rows, }: {
-    rows?: number | undefined;
+    rows?: number;
 }) => {
     autoplay: boolean;
     autoplaySpeed: number;

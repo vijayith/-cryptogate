@@ -1,6 +1,5 @@
-/// <reference types="react" />
 declare const WalletInformation: ({ onDisconnect, direction, }: {
     onDisconnect: any;
-    direction?: string | undefined;
-}) => JSX.Element;
+    direction?: string;
+}) => import("react/jsx-runtime").JSX.Element;
 export default WalletInformation;

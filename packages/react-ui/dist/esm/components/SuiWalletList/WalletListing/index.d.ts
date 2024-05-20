@@ -1,7 +1,6 @@
-/// <reference types="react" />
 declare const WalletListing: ({ Icon, heading, onWalletCall, }: {
     Icon: React.ReactNode;
     heading: any;
     onWalletCall: any;
-}) => JSX.Element;
+}) => import("react/jsx-runtime").JSX.Element;
 export default WalletListing;

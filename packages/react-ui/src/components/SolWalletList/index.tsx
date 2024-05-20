@@ -1,5 +1,5 @@
 import WalletListing from "./WalletListing";
-import { SolWallets, useSolana } from "@cryptogate/react-providers";
+import { SolWallets, useSolana } from "ith-react-providers";
 import {
   PhantomWalletAdapter,
   PhantomWalletName,

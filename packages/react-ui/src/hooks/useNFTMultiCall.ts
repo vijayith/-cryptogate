@@ -1,4 +1,4 @@
-import { EvmAddress, readContractCalls } from "@cryptogate/react-providers";
+import { EvmAddress, readContractCalls } from "ith-react-providers";
 import { ERC721, IERC721Metadata } from "@cryptogate/core";
 import { convertResultToReadableFormat } from "../utils/helpers";
 import { NFT_CONTRACT_METHODS } from "../utils/constants";

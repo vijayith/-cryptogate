@@ -4,7 +4,7 @@ import {
   EvmAddress,
   useConfig,
   useEvm,
-} from "@cryptogate/react-providers";
+} from "ith-react-providers";
 import ReadMethodComponent from "./ReadMethodComponent";
 import WriteMethodComponent from "./WriteMethodComponent";
 // import styles from "./AbiToUi.module.css";

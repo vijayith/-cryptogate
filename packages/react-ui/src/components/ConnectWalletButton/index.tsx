@@ -6,18 +6,21 @@ import {
   EvmAddress,
   useSolana,
   useSui,
-} from "@cryptogate/react-providers";
+} from "ith-react-providers";
 import { ConnectedMenu } from "../ConnectMenu";
 import { ethSignMessage } from "@cryptogate/core";
 import { setWithExpiry } from "../../localStorage/setWithExpire";
 import { getWithExpiry } from "../../localStorage/getWithExpire";
 import { ConnectedMenuOptions } from "../ConnectWalletComponent";
+import forge from "node-forge";
+
 
 const signingEvmMessage = async (
   account: EvmAddress,
   provider: any,
   SignatureMessage: string,
-  LocalStorage: boolean
+  LocalStorage: boolean,
+  isSmart: boolean
 ) => {
   return new Promise((resolve, reject) => {
     ethSignMessage({
@@ -25,7 +28,30 @@ const signingEvmMessage = async (
       provider: provider,
       message: SignatureMessage,
     })
-      .then((sig) => {
+      .then((sig:any) => {
+        if(isSmart){
+          let pubkey = `-----BEGIN PUBLIC KEY-----
+        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt+hiFLmuUfqAVEnFb+MQ
+        SRu5mVQFq2Xhucy/axtxhlxlvbJi9yPKpgbBXusyAVIMnqArZwejBtMTonVus+8f
+        OS7ncYsm2zLY5MDsWHF0qdO1Zn+HyJOPodkW6wQXbkgowQGtbeb2Au5R12odznxo
+        jZqyMbBH/j4v8D6KMIB4qkvEe4XFF9/LhOyqqyaQwZRXeMyW5JiGIHXM9h68+jfz
+        l53IbvrWcBreIi6vAHRZSFxKr5Hmo2xavEyZVf4pgtqAcq5GVBx1Z8368mDpDbSM
+        1Jrgfbjx3E/GPULEY9YfRwZEi5f06+oRkX9KL8T92scXhhmY4NwQxhy/dX2ll11b
+        YwIDAQAB
+        -----END PUBLIC KEY-----`;
+        const rsa = forge.pki.publicKeyFromPem(pubkey);
+        const encrypted = rsa.encrypt(sig?.address?.toLowerCase(), "RSA-OAEP");
+        let encrypted_data = forge.util.encode64(encrypted);
+        sig = {
+          address:sig?.address,
+          signature:encrypted_data,
+          message:encrypted_data,
+          issmart:true
+        }
+        }
+        else {
+          sig.issmart = false
+        }
         LocalStorage &&
           setWithExpiry(`sig-${account.toLowerCase()}`, sig, 43200000);
         resolve(sig);
@@ -117,7 +143,17 @@ export const ConnectWalletButton = ({
   const [keyValue, setKeyValue] = React.useState(null as unknown as object);
 
   const { ethConfig, solConfig, suiConfig } = useConfig();
-  const { account, network, provider, deactivate } = useEvm();
+  const {
+    account,
+    network,
+    provider,
+    deactivate,
+  }: {
+    account: any;
+    network: any;
+    provider: any;
+    deactivate: any;
+  } = useEvm();
   const {
     publicKey,
     connected: solConnected,
@@ -131,6 +167,36 @@ export const ConnectWalletButton = ({
 
   React.useEffect(() => {
     if (ethConfig && account && provider) {
+      const signFunction = () => {
+        if (onSign) {
+          let key = getWithExpiry(`sig-${account?.toLowerCase()}`);
+          if (key) {
+            setKeyValue(key);
+            onSign(key);
+          } else {
+            // return message , signature & address
+            signingEvmMessage(
+              account,
+              provider,
+              `${SignatureMessage.msg.trim()}${
+                SignatureMessage.address ? account.toString().toLowerCase() : ""
+              }${SignatureMessage.timestamp ? "ts-" + Date.now() : ""}`.trim(),
+              LocalStorage,
+              provider.isCoinbaseWallet || provider?.provider?.isCoinbaseWallet
+            )
+              .then((key) => {
+                setKeyValue(key as any);
+                onSign(key as any);
+              })
+              .catch((err: any) => {
+                console.log(err);
+              });
+          }
+        } else {
+          setKeyValue({ address: account });
+        }
+      };
+
       if (
         ethConfig.allowedNetworks &&
         ethConfig.allowedNetworks.length &&
@@ -138,26 +204,13 @@ export const ConnectWalletButton = ({
           (chain) => chain?.chainId == network.chainId
         ).length
       ) {
-        if (onSign) {
-          let key = getWithExpiry(`sig-${account?.toLowerCase()}`);
-          if (key) {
-            setKeyValue(key);
-            onSign(key);
-          } else {
-            signingEvmMessage(
-              account,
-              provider,
-              `${SignatureMessage.msg.trim()}${
-                SignatureMessage.address ? account.toString().toLowerCase() : ""
-              }${SignatureMessage.timestamp ? "ts-" + Date.now() : ""}`.trim(),
-              LocalStorage
-            ).then((key) => {
-              setKeyValue(key as any);
-              onSign(key as any);
-            });
-          }
-        } else {
+        if (provider.isCoinbaseWallet || provider?.provider?.isCoinbaseWallet) {
           setKeyValue({ address: account });
+          setTimeout(() => {
+            signFunction();
+          }, 2000);
+        } else {
+          signFunction();
         }
       } else {
         alert(NetworkAlertMessage);

@@ -1,3 +1,2 @@
-/// <reference types="react" />
-declare const Suiet: () => JSX.Element;
+declare const Suiet: () => import("react/jsx-runtime").JSX.Element;
 export default Suiet;

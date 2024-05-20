@@ -1,3 +1,2 @@
-/// <reference types="react" />
-declare const Metamask: () => JSX.Element;
+declare const Metamask: () => import("react/jsx-runtime").JSX.Element;
 export default Metamask;

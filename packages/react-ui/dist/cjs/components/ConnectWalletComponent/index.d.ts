@@ -12,17 +12,17 @@ export declare const ConnectWalletComponent: ({ ActiveComponent, DisabledCompone
         msg: string;
         address: boolean;
         timestamp: boolean;
-    } | undefined;
-    NetworkAlertMessage?: string | undefined;
-    ConnectedMenuChosen?: ConnectedMenuOptions | undefined;
+    };
+    NetworkAlertMessage?: string;
+    ConnectedMenuChosen?: ConnectedMenuOptions;
     Store?: {
-        Tokens?: string[] | undefined;
-        NFTs?: string[] | undefined;
-    } | undefined;
-    onSign?: ((key: {
+        Tokens?: string[];
+        NFTs?: string[];
+    };
+    onSign?: (key: {
         address: string;
         message: string;
         signature: string;
-    }) => void) | undefined;
-    LocalStorage?: boolean | undefined;
-}) => JSX.Element;
+    }) => void;
+    LocalStorage?: boolean;
+}) => import("react/jsx-runtime").JSX.Element;

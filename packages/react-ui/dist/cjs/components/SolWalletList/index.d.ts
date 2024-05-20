@@ -1,7 +1,6 @@
-/// <reference types="react" />
-import { SolWallets } from "@cryptogate/react-providers";
+import { SolWallets } from "ith-react-providers";
 declare const SolWalletListComp: ({ wallets, closeWallet }: {
     wallets: SolWallets[];
     closeWallet: () => void;
-}) => JSX.Element;
+}) => import("react/jsx-runtime").JSX.Element;
 export default SolWalletListComp;

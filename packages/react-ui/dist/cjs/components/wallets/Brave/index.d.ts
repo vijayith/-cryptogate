@@ -1,3 +1,2 @@
-/// <reference types="react" />
-declare const Brave: () => JSX.Element;
+declare const Brave: () => import("react/jsx-runtime").JSX.Element;
 export default Brave;

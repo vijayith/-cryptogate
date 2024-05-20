@@ -1,5 +1,5 @@
 import React from "react";
-import { EvmAddress, readContractCalls } from "@cryptogate/react-providers"
+import { EvmAddress, readContractCalls } from "ith-react-providers"
 import { ERC20 } from "@cryptogate/core"
 
 export const useTokensMultiCall = ({

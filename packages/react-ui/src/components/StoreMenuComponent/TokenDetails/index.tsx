@@ -1,4 +1,4 @@
-import { useEvm } from "@cryptogate/react-providers";
+import { useEvm } from "ith-react-providers";
 import { useTokensMultiCall } from "../../../hooks/useTokensMultiCall";
 import { toDecimals } from "../../../utils/helpers";
 import { TOKEN_CONTRACT_METHODS } from "../../../utils/constants";

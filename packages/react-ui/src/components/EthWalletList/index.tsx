@@ -1,5 +1,5 @@
 import WalletListing from "./WalletListing";
-import { EvmWallets, useEvm } from "@cryptogate/react-providers";
+import { EvmWallets, useEvm } from "ith-react-providers";
 import Shabakat from "../wallets/Shabakat";
 import Metamask from "../wallets/Metamask";
 import Brave from "../wallets/Brave";

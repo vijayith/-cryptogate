@@ -1,5 +1,4 @@
-/// <reference types="react" />
 export declare const ConnectWalletList: ({ openOptions, setOpenOptions, }: {
     openOptions: boolean;
     setOpenOptions: any;
-}) => JSX.Element;
+}) => import("react/jsx-runtime").JSX.Element;

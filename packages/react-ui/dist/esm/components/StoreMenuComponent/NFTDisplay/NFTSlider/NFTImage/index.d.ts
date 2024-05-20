@@ -1,7 +1,6 @@
-/// <reference types="react" />
 declare const index: ({ URI, number, symbol, }: {
     URI: string;
     number: number;
     symbol: any;
-}) => JSX.Element;
+}) => import("react/jsx-runtime").JSX.Element;
 export default index;

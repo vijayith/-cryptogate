@@ -56,15 +56,25 @@ export const useEvm = () => {
     _provider && setProvider(new ethers.providers.Web3Provider(_provider));
   };
 
-  const activateWallet = async (_provider: any) => {
+  const activateWallet = async (_provider: any, isCOinbase?: boolean) => {
     try {
-      const res = await _provider.send("eth_requestAccounts", []);
-      const chainIdRes =
-        _provider.getChainId && typeof _provider.getChainId == "function"
-          ? _provider.getChainId()
-          : (await _provider.send("eth_chainId", [])).result;
-      if (res.result) setData(res.result[0], parseInt(chainIdRes), _provider);
-      else setData(res[0], parseInt(chainIdRes), _provider);
+      if (isCOinbase) {
+        const res = await _provider.request({
+          method: "eth_requestAccounts", // Pass method as a property of an object
+        });
+
+        let chainIdRes = await _provider.request({ method: "eth_chainId" });
+
+        setData(res[0], parseInt(chainIdRes), _provider);
+      } else {
+        const res = await _provider.send("eth_requestAccounts", []);
+        const chainIdRes =
+          _provider.getChainId && typeof _provider.getChainId == "function"
+            ? _provider.getChainId()
+            : (await _provider.send("eth_chainId", [])).result;
+        if (res.result) setData(res.result[0], parseInt(chainIdRes), _provider);
+        else setData(res[0], parseInt(chainIdRes), _provider);
+      }
     } catch (err) {
       addError(err);
     }
@@ -87,10 +97,13 @@ export const useEvm = () => {
     // @Cryptogate: Might remove this later (handles popup if no extension found)
     // appLogo is optional
     else if (walletsConfig) {
-      const _coinbase = new CoinbaseWalletSDK({
-        ...walletsConfig,
-      }).makeWeb3Provider();
-      activateWallet(_coinbase);
+
+      // const _coinbase = new CoinbaseWalletSDK({
+      //   appName: "OasisX",
+      //   appChainIds: [84532],
+      // }).makeWeb3Provider();
+      // activateWallet(_coinbase, true);
+      // activateWallet(coinbase);
     }
   }, [coinbase, walletsConfig]);
 

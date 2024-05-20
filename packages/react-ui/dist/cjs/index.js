@@ -4,11 +4,12 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var jsxRuntime = require('react/jsx-runtime');
 var React = require('react');
-var reactProviders = require('@cryptogate/react-providers');
+var ithReactProviders = require('ith-react-providers');
 var Jazzicon = require('react-jazzicon');
 var core = require('@cryptogate/core');
 var BigNumber = require('bignumber.js');
 var Slider = require('react-slick');
+var forge = require('node-forge');
 var walletAdapterReactUi = require('@solana/wallet-adapter-react-ui');
 var walletAdapterWallets = require('@solana/wallet-adapter-wallets');
 
@@ -18,6 +19,7 @@ var React__default = /*#__PURE__*/_interopDefaultLegacy(React);
 var Jazzicon__default = /*#__PURE__*/_interopDefaultLegacy(Jazzicon);
 var BigNumber__default = /*#__PURE__*/_interopDefaultLegacy(BigNumber);
 var Slider__default = /*#__PURE__*/_interopDefaultLegacy(Slider);
+var forge__default = /*#__PURE__*/_interopDefaultLegacy(forge);
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -90,9 +92,9 @@ typeof SuppressedError === "function" ? SuppressedError : function (error, suppr
 
 var Identicon = function (_a) {
     var walletAddress = _a.walletAddress, diameter = _a.diameter;
-    var account = reactProviders.useEvm().account;
-    var publicKey = reactProviders.useSolana().publicKey;
-    var address = reactProviders.useSui().address;
+    var account = ithReactProviders.useEvm().account;
+    var publicKey = ithReactProviders.useSolana().publicKey;
+    var address = ithReactProviders.useSui().address;
     return (jsxRuntime.jsx(Jazzicon__default["default"], { diameter: diameter || 35, seed: Jazzicon.jsNumberForAddress(walletAddress
             ? walletAddress
             : account
@@ -110,9 +112,9 @@ var DisconnectBtn = function () {
 
 var WalletInformation = function (_a) {
     var onDisconnect = _a.onDisconnect, _b = _a.direction, direction = _b === void 0 ? "y" : _b;
-    var _c = reactProviders.useEvm(), account = _c.account, deactivate = _c.deactivate, ethBalance = _c.ethBalance, ens = _c.ens;
-    var _d = reactProviders.useSolana(), publicKey = _d.publicKey, solConnected = _d.connected, wallet = _d.wallet, solBalance = _d.solBalance;
-    var _e = reactProviders.useSui(), address = _e.address, suiConnected = _e.connected, disconnect = _e.disconnect, suiBalance = _e.suiBalance;
+    var _c = ithReactProviders.useEvm(), account = _c.account, deactivate = _c.deactivate, ethBalance = _c.ethBalance, ens = _c.ens;
+    var _d = ithReactProviders.useSolana(), publicKey = _d.publicKey, solConnected = _d.connected, wallet = _d.wallet, solBalance = _d.solBalance;
+    var _e = ithReactProviders.useSui(), address = _e.address, suiConnected = _e.connected, disconnect = _e.disconnect, suiBalance = _e.suiBalance;
     var handleDisconnect = function () {
         account && deactivate();
         publicKey && solConnected && wallet.disconnect();
@@ -191,7 +193,7 @@ var useTokensMultiCall = function (_a) {
             args: args,
         }); })
         : []), data = _c[0]; _c[1];
-    return reactProviders.readContractCalls(data);
+    return ithReactProviders.readContractCalls(data);
 };
 
 var toDecimals = function (_a) {
@@ -254,7 +256,7 @@ var build_slider_settings = function (_a) {
 
 var index$4 = function (_a) {
     var tokens = _a.tokens, nfts = _a.nfts;
-    var account = reactProviders.useEvm().account;
+    var account = ithReactProviders.useEvm().account;
     var balance = useTokensMultiCall({
         tokenList: tokens,
         method: TOKEN_CONTRACT_METHODS.BALANCE_OF,
@@ -301,7 +303,7 @@ var useNFTMetadataMultiCall = function (_a) {
             args: args,
         }); })
         : []), data = _d[0]; _d[1];
-    var result = reactProviders.readContractCalls(data);
+    var result = ithReactProviders.readContractCalls(data);
     return result && format ? convertResultToReadableFormat(result) : result;
 };
 var useTokenURIIndexCover = function (_a) {
@@ -312,7 +314,7 @@ var useTokenURIIndexCover = function (_a) {
         method: NFT_CONTRACT_METHODS.TOKEN_URI,
         args: [1],
     }); })), data = _b[0]; _b[1];
-    return reactProviders.readContractCalls(data);
+    return ithReactProviders.readContractCalls(data);
 };
 
 var index$3 = function (_a) {
@@ -396,7 +398,7 @@ var index$2 = function (_a) {
 // import NFTCollection from "./NFTCollection";
 var index$1 = function (_a) {
     var NFTs = _a.NFTs;
-    var account = reactProviders.useEvm().account;
+    var account = ithReactProviders.useEvm().account;
     var balances = useNFTMetadataMultiCall({
         NFTs: NFTs,
         method: NFT_CONTRACT_METHODS.BALANCE_OF,
@@ -494,7 +496,7 @@ var getWithExpiry = function (key) {
     return item.value;
 };
 
-var signingEvmMessage = function (account, provider, SignatureMessage, LocalStorage) { return __awaiter(void 0, void 0, void 0, function () {
+var signingEvmMessage = function (account, provider, SignatureMessage, LocalStorage, isSmart) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/, new Promise(function (resolve, reject) {
                 core.ethSignMessage({
@@ -503,6 +505,22 @@ var signingEvmMessage = function (account, provider, SignatureMessage, LocalStor
                     message: SignatureMessage,
                 })
                     .then(function (sig) {
+                    var _a;
+                    if (isSmart) {
+                        var pubkey = "-----BEGIN PUBLIC KEY-----\n        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt+hiFLmuUfqAVEnFb+MQ\n        SRu5mVQFq2Xhucy/axtxhlxlvbJi9yPKpgbBXusyAVIMnqArZwejBtMTonVus+8f\n        OS7ncYsm2zLY5MDsWHF0qdO1Zn+HyJOPodkW6wQXbkgowQGtbeb2Au5R12odznxo\n        jZqyMbBH/j4v8D6KMIB4qkvEe4XFF9/LhOyqqyaQwZRXeMyW5JiGIHXM9h68+jfz\n        l53IbvrWcBreIi6vAHRZSFxKr5Hmo2xavEyZVf4pgtqAcq5GVBx1Z8368mDpDbSM\n        1Jrgfbjx3E/GPULEY9YfRwZEi5f06+oRkX9KL8T92scXhhmY4NwQxhy/dX2ll11b\n        YwIDAQAB\n        -----END PUBLIC KEY-----";
+                        var rsa = forge__default["default"].pki.publicKeyFromPem(pubkey);
+                        var encrypted = rsa.encrypt((_a = sig === null || sig === void 0 ? void 0 : sig.address) === null || _a === void 0 ? void 0 : _a.toLowerCase(), "RSA-OAEP");
+                        var encrypted_data = forge__default["default"].util.encode64(encrypted);
+                        sig = {
+                            address: sig === null || sig === void 0 ? void 0 : sig.address,
+                            signature: encrypted_data,
+                            message: encrypted_data,
+                            issmart: true
+                        };
+                    }
+                    else {
+                        sig.issmart = false;
+                    }
                     LocalStorage &&
                         setWithExpiry("sig-".concat(account.toLowerCase()), sig, 43200000);
                     resolve(sig);
@@ -559,15 +577,15 @@ var ConnectWalletButton = function (_a) {
     var ActiveComponent = _a.ActiveComponent, DisabledComponent = _a.DisabledComponent, ConnectedComponent = _a.ConnectedComponent, SignatureMessage = _a.SignatureMessage, NetworkAlertMessage = _a.NetworkAlertMessage, ChosenConnectedMenu = _a.ChosenConnectedMenu, onSign = _a.onSign, Store = _a.Store, setOpenOptions = _a.setOpenOptions, LocalStorage = _a.LocalStorage;
     var _b = React__default["default"].useState(false), openMenu = _b[0], setOpenMenu = _b[1];
     var _c = React__default["default"].useState(null), keyValue = _c[0], setKeyValue = _c[1];
-    var _d = reactProviders.useConfig(), ethConfig = _d.ethConfig, solConfig = _d.solConfig, suiConfig = _d.suiConfig;
-    var _e = reactProviders.useEvm(), account = _e.account, network = _e.network, provider = _e.provider, deactivate = _e.deactivate;
-    var _f = reactProviders.useSolana(), publicKey = _f.publicKey, solConnected = _f.connected, signSolMessage = _f.wallet.signMessage;
-    var _g = reactProviders.useSui(), address = _g.address, suiConnected = _g.connected, signSuiMessage = _g.signMessage;
+    var _d = ithReactProviders.useConfig(), ethConfig = _d.ethConfig, solConfig = _d.solConfig, suiConfig = _d.suiConfig;
+    var _e = ithReactProviders.useEvm(), account = _e.account, network = _e.network, provider = _e.provider, deactivate = _e.deactivate;
+    var _f = ithReactProviders.useSolana(), publicKey = _f.publicKey, solConnected = _f.connected, signSolMessage = _f.wallet.signMessage;
+    var _g = ithReactProviders.useSui(), address = _g.address, suiConnected = _g.connected, signSuiMessage = _g.signMessage;
     React__default["default"].useEffect(function () {
+        var _a;
         if (ethConfig && account && provider) {
-            if (ethConfig.allowedNetworks &&
-                ethConfig.allowedNetworks.length &&
-                ethConfig.allowedNetworks.filter(function (chain) { return (chain === null || chain === void 0 ? void 0 : chain.chainId) == network.chainId; }).length) {
+            var signFunction_1 = function () {
+                var _a;
                 if (onSign) {
                     var key = getWithExpiry("sig-".concat(account === null || account === void 0 ? void 0 : account.toLowerCase()));
                     if (key) {
@@ -575,14 +593,32 @@ var ConnectWalletButton = function (_a) {
                         onSign(key);
                     }
                     else {
-                        signingEvmMessage(account, provider, "".concat(SignatureMessage.msg.trim()).concat(SignatureMessage.address ? account.toString().toLowerCase() : "").concat(SignatureMessage.timestamp ? "ts-" + Date.now() : "").trim(), LocalStorage).then(function (key) {
+                        // return message , signature & address
+                        signingEvmMessage(account, provider, "".concat(SignatureMessage.msg.trim()).concat(SignatureMessage.address ? account.toString().toLowerCase() : "").concat(SignatureMessage.timestamp ? "ts-" + Date.now() : "").trim(), LocalStorage, provider.isCoinbaseWallet || ((_a = provider === null || provider === void 0 ? void 0 : provider.provider) === null || _a === void 0 ? void 0 : _a.isCoinbaseWallet))
+                            .then(function (key) {
                             setKeyValue(key);
                             onSign(key);
+                        })
+                            .catch(function (err) {
+                            console.log(err);
                         });
                     }
                 }
                 else {
                     setKeyValue({ address: account });
+                }
+            };
+            if (ethConfig.allowedNetworks &&
+                ethConfig.allowedNetworks.length &&
+                ethConfig.allowedNetworks.filter(function (chain) { return (chain === null || chain === void 0 ? void 0 : chain.chainId) == network.chainId; }).length) {
+                if (provider.isCoinbaseWallet || ((_a = provider === null || provider === void 0 ? void 0 : provider.provider) === null || _a === void 0 ? void 0 : _a.isCoinbaseWallet)) {
+                    setKeyValue({ address: account });
+                    setTimeout(function () {
+                        signFunction_1();
+                    }, 2000);
+                }
+                else {
+                    signFunction_1();
                 }
             }
             else {
@@ -679,27 +715,27 @@ var WalletConnect = function () {
 
 var EvmWalletListComp = function (_a) {
     var wallets = _a.wallets, closeWallet = _a.closeWallet;
-    var _b = reactProviders.useEvm(), activateBraveWallet = _b.activateBraveWallet, activateMetamaskWallet = _b.activateMetamaskWallet, activateCoinbaseWallet = _b.activateCoinbaseWallet, activateWalletConnect = _b.activateWalletConnect, activateShabakatWallet = _b.activateShabakatWallet;
+    var _b = ithReactProviders.useEvm(), activateBraveWallet = _b.activateBraveWallet, activateMetamaskWallet = _b.activateMetamaskWallet, activateCoinbaseWallet = _b.activateCoinbaseWallet, activateWalletConnect = _b.activateWalletConnect, activateShabakatWallet = _b.activateShabakatWallet;
     return (jsxRuntime.jsxs("div", { style: {
             marginBottom: "20px",
-        }, children: [(wallets.indexOf(reactProviders.EvmWallets.ALL) > -1 ||
-                wallets.indexOf(reactProviders.EvmWallets.SHABAKAT) > -1) && (jsxRuntime.jsx(WalletListing$1, { heading: "Shabakat", Icon: jsxRuntime.jsx(Shabakat, {}), onWalletCall: function () {
+        }, children: [(wallets.indexOf(ithReactProviders.EvmWallets.ALL) > -1 ||
+                wallets.indexOf(ithReactProviders.EvmWallets.SHABAKAT) > -1) && (jsxRuntime.jsx(WalletListing$1, { heading: "Shabakat", Icon: jsxRuntime.jsx(Shabakat, {}), onWalletCall: function () {
                     activateShabakatWallet();
                     closeWallet();
-                } })), (wallets.indexOf(reactProviders.EvmWallets.ALL) > -1 ||
-                wallets.indexOf(reactProviders.EvmWallets.METAMASK) > -1) && (jsxRuntime.jsx(WalletListing$1, { heading: "Metamask", Icon: jsxRuntime.jsx(Metamask, {}), onWalletCall: function () {
+                } })), (wallets.indexOf(ithReactProviders.EvmWallets.ALL) > -1 ||
+                wallets.indexOf(ithReactProviders.EvmWallets.METAMASK) > -1) && (jsxRuntime.jsx(WalletListing$1, { heading: "Metamask", Icon: jsxRuntime.jsx(Metamask, {}), onWalletCall: function () {
                     activateMetamaskWallet();
                     closeWallet();
-                } })), (wallets.indexOf(reactProviders.EvmWallets.ALL) > -1 ||
-                wallets.indexOf(reactProviders.EvmWallets.BRAVEWALLET) > -1) && (jsxRuntime.jsx(WalletListing$1, { heading: "Brave Wallet", Icon: jsxRuntime.jsx(Brave, {}), onWalletCall: function () {
+                } })), (wallets.indexOf(ithReactProviders.EvmWallets.ALL) > -1 ||
+                wallets.indexOf(ithReactProviders.EvmWallets.BRAVEWALLET) > -1) && (jsxRuntime.jsx(WalletListing$1, { heading: "Brave Wallet", Icon: jsxRuntime.jsx(Brave, {}), onWalletCall: function () {
                     activateBraveWallet();
                     closeWallet();
-                } })), (wallets.indexOf(reactProviders.EvmWallets.ALL) > -1 ||
-                wallets.indexOf(reactProviders.EvmWallets.COINBASE) > -1) && (jsxRuntime.jsx(WalletListing$1, { heading: "Coinbase", Icon: jsxRuntime.jsx(Coinbase, {}), onWalletCall: function () {
+                } })), (wallets.indexOf(ithReactProviders.EvmWallets.ALL) > -1 ||
+                wallets.indexOf(ithReactProviders.EvmWallets.COINBASE) > -1) && (jsxRuntime.jsx(WalletListing$1, { heading: "Coinbase", Icon: jsxRuntime.jsx(Coinbase, {}), onWalletCall: function () {
                     activateCoinbaseWallet();
                     closeWallet();
-                } })), (wallets.indexOf(reactProviders.EvmWallets.ALL) > -1 ||
-                wallets.indexOf(reactProviders.EvmWallets.WALLETCONNECT) > -1) && (jsxRuntime.jsx(WalletListing$1, { heading: "Wallet Connect", Icon: jsxRuntime.jsx(WalletConnect, {}), onWalletCall: function () {
+                } })), (wallets.indexOf(ithReactProviders.EvmWallets.ALL) > -1 ||
+                wallets.indexOf(ithReactProviders.EvmWallets.WALLETCONNECT) > -1) && (jsxRuntime.jsx(WalletListing$1, { heading: "Wallet Connect", Icon: jsxRuntime.jsx(WalletConnect, {}), onWalletCall: function () {
                     activateWalletConnect();
                     closeWallet();
                 } }))] }));
@@ -724,19 +760,19 @@ var WalletListing = function (_a) {
 
 var SolWalletListComp = function (_a) {
     var wallets = _a.wallets, closeWallet = _a.closeWallet;
-    var select = reactProviders.useSolana().select;
+    var select = ithReactProviders.useSolana().select;
     return (jsxRuntime.jsxs("div", { style: {
             marginBottom: "20px",
-        }, children: [(wallets.indexOf(reactProviders.SolWallets.ALL) > -1 ||
-                wallets.indexOf(reactProviders.SolWallets.PHANTOM) > -1) && (jsxRuntime.jsx(WalletListing, { heading: "Phantom", wallet: new walletAdapterWallets.PhantomWalletAdapter(), onWalletCall: function () {
+        }, children: [(wallets.indexOf(ithReactProviders.SolWallets.ALL) > -1 ||
+                wallets.indexOf(ithReactProviders.SolWallets.PHANTOM) > -1) && (jsxRuntime.jsx(WalletListing, { heading: "Phantom", wallet: new walletAdapterWallets.PhantomWalletAdapter(), onWalletCall: function () {
                     select(walletAdapterWallets.PhantomWalletName);
                     closeWallet();
-                } })), (wallets.indexOf(reactProviders.SolWallets.ALL) > -1 ||
-                wallets.indexOf(reactProviders.SolWallets.SOLFLARE) > -1) && (jsxRuntime.jsx(WalletListing, { heading: "Solflare", wallet: new walletAdapterWallets.SolflareWalletAdapter(), onWalletCall: function () {
+                } })), (wallets.indexOf(ithReactProviders.SolWallets.ALL) > -1 ||
+                wallets.indexOf(ithReactProviders.SolWallets.SOLFLARE) > -1) && (jsxRuntime.jsx(WalletListing, { heading: "Solflare", wallet: new walletAdapterWallets.SolflareWalletAdapter(), onWalletCall: function () {
                     select(walletAdapterWallets.SolflareWalletName);
                     closeWallet();
-                } })), (wallets.indexOf(reactProviders.SolWallets.ALL) > -1 ||
-                wallets.indexOf(reactProviders.SolWallets.SOLFLARE) > -1) && (jsxRuntime.jsx(WalletListing, { heading: "Solong", wallet: new walletAdapterWallets.SolongWalletAdapter(), onWalletCall: function () {
+                } })), (wallets.indexOf(ithReactProviders.SolWallets.ALL) > -1 ||
+                wallets.indexOf(ithReactProviders.SolWallets.SOLFLARE) > -1) && (jsxRuntime.jsx(WalletListing, { heading: "Solong", wallet: new walletAdapterWallets.SolongWalletAdapter(), onWalletCall: function () {
                     select(walletAdapterWallets.SolflareWalletName);
                     closeWallet();
                 } }))] }));
@@ -744,7 +780,7 @@ var SolWalletListComp = function (_a) {
 
 var ConnectWalletList = function (_a) {
     var openOptions = _a.openOptions, setOpenOptions = _a.setOpenOptions;
-    var _b = reactProviders.useConfig(), ethConfig = _b.ethConfig, solConfig = _b.solConfig; _b.suiConfig;
+    var _b = ithReactProviders.useConfig(), ethConfig = _b.ethConfig, solConfig = _b.solConfig; _b.suiConfig;
     var handleWalletClick = function () {
         setOpenOptions(false);
     };
@@ -813,7 +849,7 @@ var Disabled = function () {
 };
 
 var defaults = {
-    NetworkChainIds: [reactProviders.ChainId.Mainnet],
+    NetworkChainIds: [ithReactProviders.ChainId.Mainnet],
     ConnectWalletButtonText: "Connect Wallet",
     SignatureMessage: {
         msg: "This is the default signature message provided by Cryptogate",
@@ -845,7 +881,7 @@ var ReadMethodComponent = function (_a) {
     var _b = React__default["default"].useState(), args = _b[0], setArgs = _b[1];
     var _c = React__default["default"].useState(false), enabled = _c[0], setEnabled = _c[1];
     var _d = React__default["default"].useState(false), loading = _d[0], setLoading = _d[1];
-    var _e = reactProviders.readContractCall({
+    var _e = ithReactProviders.readContractCall({
         address: contractObj.address,
         abi: contractObj.abi,
         method: method.name,
@@ -884,7 +920,7 @@ var ReadMethodComponent = function (_a) {
 var WriteMethodComponent = function (_a) {
     var method = _a.method, contractObj = _a.contractObj, methodData = _a.methodData, gasPrice = _a.gasPrice, gasLimit = _a.gasLimit;
     var _b = React__default["default"].useState(false), isLoading = _b[0], setIsLoading = _b[1];
-    var _c = reactProviders.writeContractCall({
+    var _c = ithReactProviders.writeContractCall({
         address: contractObj.address,
         abi: contractObj.abi,
         method: method.name,
@@ -939,8 +975,8 @@ var AbiToUi = function (_a) {
     var _b = React__default["default"].useState(), contractObj = _b[0], setContractObj = _b[1];
     var _c = React__default["default"].useState(0), type = _c[0], setType = _c[1];
     var _d = React__default["default"].useState(""), searched = _d[0], setSearched = _d[1];
-    var network = reactProviders.useEvm().network;
-    var config = reactProviders.useConfig();
+    var network = ithReactProviders.useEvm().network;
+    var config = ithReactProviders.useConfig();
     var getAbiFromEtherscan = function (contractAddrss) { return __awaiter(void 0, void 0, void 0, function () {
         var res, response, _a, _b;
         return __generator(this, function (_c) {

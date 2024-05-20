@@ -9,7 +9,6 @@ var walletAdapterWallets = require('@solana/wallet-adapter-wallets');
 var walletAdapterBase = require('@solana/wallet-adapter-base');
 var web3_js = require('@solana/web3.js');
 var walletKit = require('@suiet/wallet-kit');
-var CoinbaseWalletSDK = require('@coinbase/wallet-sdk');
 var ethereumProvider = require('@walletconnect/ethereum-provider');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
@@ -34,7 +33,6 @@ function _interopNamespace(e) {
 
 var React__default = /*#__PURE__*/_interopDefaultLegacy(React);
 var ethers__namespace = /*#__PURE__*/_interopNamespace(ethers);
-var CoinbaseWalletSDK__default = /*#__PURE__*/_interopDefaultLegacy(CoinbaseWalletSDK);
 
 const ConfigContext = React__default["default"].createContext({ ethConfig: { defaultNetwork: undefined, readOnlyUrls: {} } });
 function useConfig() {
@@ -704,16 +702,25 @@ const useEvm = () => {
         provider === null || provider === void 0 ? void 0 : provider.removeAllListeners();
         _provider && setProvider(new ethers__namespace.providers.Web3Provider(_provider));
     };
-    const activateWallet = (_provider) => __awaiter(void 0, void 0, void 0, function* () {
+    const activateWallet = (_provider, isCOinbase) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const res = yield _provider.send("eth_requestAccounts", []);
-            const chainIdRes = _provider.getChainId && typeof _provider.getChainId == "function"
-                ? _provider.getChainId()
-                : (yield _provider.send("eth_chainId", [])).result;
-            if (res.result)
-                setData(res.result[0], parseInt(chainIdRes), _provider);
-            else
+            if (isCOinbase) {
+                const res = yield _provider.request({
+                    method: "eth_requestAccounts", // Pass method as a property of an object
+                });
+                let chainIdRes = yield _provider.request({ method: "eth_chainId" });
                 setData(res[0], parseInt(chainIdRes), _provider);
+            }
+            else {
+                const res = yield _provider.send("eth_requestAccounts", []);
+                const chainIdRes = _provider.getChainId && typeof _provider.getChainId == "function"
+                    ? _provider.getChainId()
+                    : (yield _provider.send("eth_chainId", [])).result;
+                if (res.result)
+                    setData(res.result[0], parseInt(chainIdRes), _provider);
+                else
+                    setData(res[0], parseInt(chainIdRes), _provider);
+            }
         }
         catch (err) {
             addError(err);
@@ -734,12 +741,6 @@ const useEvm = () => {
     const activateCoinbaseWallet = React__default["default"].useCallback(() => __awaiter(void 0, void 0, void 0, function* () {
         if (coinbase)
             activateWallet(coinbase);
-        // @Cryptogate: Might remove this later (handles popup if no extension found)
-        // appLogo is optional
-        else if (walletsConfig) {
-            const _coinbase = new CoinbaseWalletSDK__default["default"](Object.assign({}, walletsConfig)).makeWeb3Provider();
-            activateWallet(_coinbase);
-        }
     }), [coinbase, walletsConfig]);
     const activateWalletConnect = () => __awaiter(void 0, void 0, void 0, function* () {
         const provider = yield ethereumProvider.EthereumProvider.init({
@@ -1128,12 +1129,8 @@ const writeContractCall = ({ abi, address, contract, method, }) => {
                 _address = address;
             }
             else if ((config === null || config === void 0 ? void 0 : config.ethConfig) && (network === null || network === void 0 ? void 0 : network.chainId)) {
-                console.log(config);
                 const contracts = (_a = config.ethConfig.contractList) === null || _a === void 0 ? void 0 : _a.filter((_contract) => _contract.name == contract);
-                console.log(contracts);
                 if (contracts && contracts.length) {
-                    console.log(contracts[0].abi);
-                    console.log(contracts[0].addresses[network.chainId]);
                     _abi = contracts[0].abi;
                     _address = contracts[0].addresses[network.chainId];
                 }

@@ -1,5 +1,5 @@
 import { Active, Disabled } from "./components";
-import { ChainId } from "@cryptogate/react-providers"
+import { ChainId } from "ith-react-providers"
 
 export { Active, Disabled };
 

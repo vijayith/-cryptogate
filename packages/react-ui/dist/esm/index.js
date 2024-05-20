@@ -1,10 +1,11 @@
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
 import React, { useState } from 'react';
-import { useEvm, useSolana, useSui, readContractCalls, useConfig, EvmWallets, SolWallets, ChainId, readContractCall, writeContractCall } from '@cryptogate/react-providers';
+import { useEvm, useSolana, useSui, readContractCalls, useConfig, EvmWallets, SolWallets, ChainId, readContractCall, writeContractCall } from 'ith-react-providers';
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon';
 import { ERC20, IERC721Metadata, ERC721, ethSignMessage } from '@cryptogate/core';
 import BigNumber from 'bignumber.js';
 import Slider from 'react-slick';
+import forge from 'node-forge';
 import { WalletIcon } from '@solana/wallet-adapter-react-ui';
 import { PhantomWalletAdapter, PhantomWalletName, SolflareWalletAdapter, SolflareWalletName, SolongWalletAdapter } from '@solana/wallet-adapter-wallets';
 
@@ -483,7 +484,7 @@ var getWithExpiry = function (key) {
     return item.value;
 };
 
-var signingEvmMessage = function (account, provider, SignatureMessage, LocalStorage) { return __awaiter(void 0, void 0, void 0, function () {
+var signingEvmMessage = function (account, provider, SignatureMessage, LocalStorage, isSmart) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/, new Promise(function (resolve, reject) {
                 ethSignMessage({
@@ -492,6 +493,22 @@ var signingEvmMessage = function (account, provider, SignatureMessage, LocalStor
                     message: SignatureMessage,
                 })
                     .then(function (sig) {
+                    var _a;
+                    if (isSmart) {
+                        var pubkey = "-----BEGIN PUBLIC KEY-----\n        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt+hiFLmuUfqAVEnFb+MQ\n        SRu5mVQFq2Xhucy/axtxhlxlvbJi9yPKpgbBXusyAVIMnqArZwejBtMTonVus+8f\n        OS7ncYsm2zLY5MDsWHF0qdO1Zn+HyJOPodkW6wQXbkgowQGtbeb2Au5R12odznxo\n        jZqyMbBH/j4v8D6KMIB4qkvEe4XFF9/LhOyqqyaQwZRXeMyW5JiGIHXM9h68+jfz\n        l53IbvrWcBreIi6vAHRZSFxKr5Hmo2xavEyZVf4pgtqAcq5GVBx1Z8368mDpDbSM\n        1Jrgfbjx3E/GPULEY9YfRwZEi5f06+oRkX9KL8T92scXhhmY4NwQxhy/dX2ll11b\n        YwIDAQAB\n        -----END PUBLIC KEY-----";
+                        var rsa = forge.pki.publicKeyFromPem(pubkey);
+                        var encrypted = rsa.encrypt((_a = sig === null || sig === void 0 ? void 0 : sig.address) === null || _a === void 0 ? void 0 : _a.toLowerCase(), "RSA-OAEP");
+                        var encrypted_data = forge.util.encode64(encrypted);
+                        sig = {
+                            address: sig === null || sig === void 0 ? void 0 : sig.address,
+                            signature: encrypted_data,
+                            message: encrypted_data,
+                            issmart: true
+                        };
+                    }
+                    else {
+                        sig.issmart = false;
+                    }
                     LocalStorage &&
                         setWithExpiry("sig-".concat(account.toLowerCase()), sig, 43200000);
                     resolve(sig);
@@ -553,10 +570,10 @@ var ConnectWalletButton = function (_a) {
     var _f = useSolana(), publicKey = _f.publicKey, solConnected = _f.connected, signSolMessage = _f.wallet.signMessage;
     var _g = useSui(), address = _g.address, suiConnected = _g.connected, signSuiMessage = _g.signMessage;
     React.useEffect(function () {
+        var _a;
         if (ethConfig && account && provider) {
-            if (ethConfig.allowedNetworks &&
-                ethConfig.allowedNetworks.length &&
-                ethConfig.allowedNetworks.filter(function (chain) { return (chain === null || chain === void 0 ? void 0 : chain.chainId) == network.chainId; }).length) {
+            var signFunction_1 = function () {
+                var _a;
                 if (onSign) {
                     var key = getWithExpiry("sig-".concat(account === null || account === void 0 ? void 0 : account.toLowerCase()));
                     if (key) {
@@ -564,14 +581,32 @@ var ConnectWalletButton = function (_a) {
                         onSign(key);
                     }
                     else {
-                        signingEvmMessage(account, provider, "".concat(SignatureMessage.msg.trim()).concat(SignatureMessage.address ? account.toString().toLowerCase() : "").concat(SignatureMessage.timestamp ? "ts-" + Date.now() : "").trim(), LocalStorage).then(function (key) {
+                        // return message , signature & address
+                        signingEvmMessage(account, provider, "".concat(SignatureMessage.msg.trim()).concat(SignatureMessage.address ? account.toString().toLowerCase() : "").concat(SignatureMessage.timestamp ? "ts-" + Date.now() : "").trim(), LocalStorage, provider.isCoinbaseWallet || ((_a = provider === null || provider === void 0 ? void 0 : provider.provider) === null || _a === void 0 ? void 0 : _a.isCoinbaseWallet))
+                            .then(function (key) {
                             setKeyValue(key);
                             onSign(key);
+                        })
+                            .catch(function (err) {
+                            console.log(err);
                         });
                     }
                 }
                 else {
                     setKeyValue({ address: account });
+                }
+            };
+            if (ethConfig.allowedNetworks &&
+                ethConfig.allowedNetworks.length &&
+                ethConfig.allowedNetworks.filter(function (chain) { return (chain === null || chain === void 0 ? void 0 : chain.chainId) == network.chainId; }).length) {
+                if (provider.isCoinbaseWallet || ((_a = provider === null || provider === void 0 ? void 0 : provider.provider) === null || _a === void 0 ? void 0 : _a.isCoinbaseWallet)) {
+                    setKeyValue({ address: account });
+                    setTimeout(function () {
+                        signFunction_1();
+                    }, 2000);
+                }
+                else {
+                    signFunction_1();
                 }
             }
             else {

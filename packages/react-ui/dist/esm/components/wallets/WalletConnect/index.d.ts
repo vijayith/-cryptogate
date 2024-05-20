@@ -1,3 +1,2 @@
-/// <reference types="react" />
-declare const WalletConnect: () => JSX.Element;
+declare const WalletConnect: () => import("react/jsx-runtime").JSX.Element;
 export default WalletConnect;

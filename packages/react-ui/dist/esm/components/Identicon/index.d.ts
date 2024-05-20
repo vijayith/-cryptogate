@@ -1,5 +1,4 @@
-/// <reference types="react" />
 export declare const Identicon: ({ walletAddress, diameter, }: {
-    walletAddress?: string | undefined;
-    diameter?: number | undefined;
-}) => JSX.Element;
+    walletAddress?: string;
+    diameter?: number;
+}) => import("react/jsx-runtime").JSX.Element;

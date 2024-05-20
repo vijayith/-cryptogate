@@ -3,7 +3,7 @@ import {
   readContractCall,
   ContractABIUnit,
   EvmAddress,
-} from "@cryptogate/react-providers";
+} from "ith-react-providers";
 import Loader from "../../Loader";
 import "./ReadMethodComponent.module.css";
 

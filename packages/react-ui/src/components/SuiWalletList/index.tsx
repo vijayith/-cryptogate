@@ -1,5 +1,5 @@
 import WalletListing from "./WalletListing";
-import { SuiWallets, useSui } from "@cryptogate/react-providers";
+import { SuiWallets, useSui } from "ith-react-providers";
 import Suiet from "../wallets/Suiet";
 import Ethos from "../wallets/Ethos";
 import Sui from "../wallets/Sui";
