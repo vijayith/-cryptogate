@@ -8,7 +8,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "3.0.6",
+  "version": "3.0.7",
   "description": "Cryptogate Web3 UI Components",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -28,7 +28,7 @@
     "@types/node-forge": "^1.3.11",
     "bignumber.js": "*",
     "ethers": "^6.11.1",
-    "ith-react-providers": "^2.0.4",
+    "ith-react-providers": "^2.0.5",
     "node-forge": "^1.3.1",
     "react-device-detect": "^2.2.2",
     "react-jazzicon": "^1.0.3",

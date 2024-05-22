@@ -9,6 +9,7 @@ var walletAdapterWallets = require('@solana/wallet-adapter-wallets');
 var walletAdapterBase = require('@solana/wallet-adapter-base');
 var web3_js = require('@solana/web3.js');
 var walletKit = require('@suiet/wallet-kit');
+var CoinbaseWalletSDK = require('@coinbase/wallet-sdk');
 var ethereumProvider = require('@walletconnect/ethereum-provider');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
@@ -33,6 +34,7 @@ function _interopNamespace(e) {
 
 var React__default = /*#__PURE__*/_interopDefaultLegacy(React);
 var ethers__namespace = /*#__PURE__*/_interopNamespace(ethers);
+var CoinbaseWalletSDK__default = /*#__PURE__*/_interopDefaultLegacy(CoinbaseWalletSDK);
 
 const ConfigContext = React__default["default"].createContext({ ethConfig: { defaultNetwork: undefined, readOnlyUrls: {} } });
 function useConfig() {
@@ -741,6 +743,12 @@ const useEvm = () => {
     const activateCoinbaseWallet = React__default["default"].useCallback(() => __awaiter(void 0, void 0, void 0, function* () {
         if (coinbase)
             activateWallet(coinbase);
+        // @Cryptogate: Might remove this later (handles popup if no extension found)
+        // appLogo is optional
+        else if (walletsConfig) {
+            const _coinbase = new CoinbaseWalletSDK__default["default"](Object.assign({}, walletsConfig)).makeWeb3Provider();
+            activateWallet(_coinbase);
+        }
     }), [coinbase, walletsConfig]);
     const activateWalletConnect = () => __awaiter(void 0, void 0, void 0, function* () {
         const provider = yield ethereumProvider.EthereumProvider.init({

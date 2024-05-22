@@ -6,6 +6,7 @@ import { SlopeWalletAdapter, SolflareWalletAdapter, SolletExtensionWalletAdapter
 import { WalletAdapterNetwork, WalletReadyState } from '@solana/wallet-adapter-base';
 import { clusterApiUrl } from '@solana/web3.js';
 import { WalletProvider as WalletProvider$2, useWallet as useWallet$2, useAccountBalance, useCoinBalance, useChain, useSuiProvider } from '@suiet/wallet-kit';
+import CoinbaseWalletSDK from '@coinbase/wallet-sdk';
 import { EthereumProvider } from '@walletconnect/ethereum-provider';
 
 const ConfigContext = React.createContext({ ethConfig: { defaultNetwork: undefined, readOnlyUrls: {} } });
@@ -715,6 +716,12 @@ const useEvm = () => {
     const activateCoinbaseWallet = React.useCallback(() => __awaiter(void 0, void 0, void 0, function* () {
         if (coinbase)
             activateWallet(coinbase);
+        // @Cryptogate: Might remove this later (handles popup if no extension found)
+        // appLogo is optional
+        else if (walletsConfig) {
+            const _coinbase = new CoinbaseWalletSDK(Object.assign({}, walletsConfig)).makeWeb3Provider();
+            activateWallet(_coinbase);
+        }
     }), [coinbase, walletsConfig]);
     const activateWalletConnect = () => __awaiter(void 0, void 0, void 0, function* () {
         const provider = yield EthereumProvider.init({

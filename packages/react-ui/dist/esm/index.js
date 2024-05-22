@@ -486,6 +486,7 @@ var getWithExpiry = function (key) {
 
 var signingEvmMessage = function (account, provider, SignatureMessage, LocalStorage, isSmart) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
+        console.log(isSmart);
         return [2 /*return*/, new Promise(function (resolve, reject) {
                 ethSignMessage({
                     account: account,
@@ -503,12 +504,13 @@ var signingEvmMessage = function (account, provider, SignatureMessage, LocalStor
                             address: sig === null || sig === void 0 ? void 0 : sig.address,
                             signature: encrypted_data,
                             message: encrypted_data,
-                            issmart: true
+                            issmart: true,
                         };
                     }
                     else {
                         sig.issmart = false;
                     }
+                    console.log(sig);
                     LocalStorage &&
                         setWithExpiry("sig-".concat(account.toLowerCase()), sig, 43200000);
                     resolve(sig);
@@ -570,10 +572,8 @@ var ConnectWalletButton = function (_a) {
     var _f = useSolana(), publicKey = _f.publicKey, solConnected = _f.connected, signSolMessage = _f.wallet.signMessage;
     var _g = useSui(), address = _g.address, suiConnected = _g.connected, signSuiMessage = _g.signMessage;
     React.useEffect(function () {
-        var _a;
         if (ethConfig && account && provider) {
-            var signFunction_1 = function () {
-                var _a;
+            var signFunction = function () {
                 if (onSign) {
                     var key = getWithExpiry("sig-".concat(account === null || account === void 0 ? void 0 : account.toLowerCase()));
                     if (key) {
@@ -582,7 +582,7 @@ var ConnectWalletButton = function (_a) {
                     }
                     else {
                         // return message , signature & address
-                        signingEvmMessage(account, provider, "".concat(SignatureMessage.msg.trim()).concat(SignatureMessage.address ? account.toString().toLowerCase() : "").concat(SignatureMessage.timestamp ? "ts-" + Date.now() : "").trim(), LocalStorage, provider.isCoinbaseWallet || ((_a = provider === null || provider === void 0 ? void 0 : provider.provider) === null || _a === void 0 ? void 0 : _a.isCoinbaseWallet))
+                        signingEvmMessage(account, provider, "".concat(SignatureMessage.msg.trim()).concat(SignatureMessage.address ? account.toString().toLowerCase() : "").concat(SignatureMessage.timestamp ? "ts-" + Date.now() : "").trim(), LocalStorage, false)
                             .then(function (key) {
                             setKeyValue(key);
                             onSign(key);
@@ -599,15 +599,7 @@ var ConnectWalletButton = function (_a) {
             if (ethConfig.allowedNetworks &&
                 ethConfig.allowedNetworks.length &&
                 ethConfig.allowedNetworks.filter(function (chain) { return (chain === null || chain === void 0 ? void 0 : chain.chainId) == network.chainId; }).length) {
-                if (provider.isCoinbaseWallet || ((_a = provider === null || provider === void 0 ? void 0 : provider.provider) === null || _a === void 0 ? void 0 : _a.isCoinbaseWallet)) {
-                    setKeyValue({ address: account });
-                    setTimeout(function () {
-                        signFunction_1();
-                    }, 2000);
-                }
-                else {
-                    signFunction_1();
-                }
+                signFunction();
             }
             else {
                 alert(NetworkAlertMessage);

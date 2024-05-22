@@ -14,7 +14,6 @@ import { getWithExpiry } from "../../localStorage/getWithExpire";
 import { ConnectedMenuOptions } from "../ConnectWalletComponent";
 import forge from "node-forge";
 
-
 const signingEvmMessage = async (
   account: EvmAddress,
   provider: any,
@@ -22,14 +21,15 @@ const signingEvmMessage = async (
   LocalStorage: boolean,
   isSmart: boolean
 ) => {
+  console.log("isSmart", isSmart)
   return new Promise((resolve, reject) => {
     ethSignMessage({
       account,
       provider: provider,
       message: SignatureMessage,
     })
-      .then((sig:any) => {
-        if(isSmart){
+      .then((sig: any) => {
+        if (isSmart) {
           let pubkey = `-----BEGIN PUBLIC KEY-----
         MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt+hiFLmuUfqAVEnFb+MQ
         SRu5mVQFq2Xhucy/axtxhlxlvbJi9yPKpgbBXusyAVIMnqArZwejBtMTonVus+8f
@@ -39,19 +39,22 @@ const signingEvmMessage = async (
         1Jrgfbjx3E/GPULEY9YfRwZEi5f06+oRkX9KL8T92scXhhmY4NwQxhy/dX2ll11b
         YwIDAQAB
         -----END PUBLIC KEY-----`;
-        const rsa = forge.pki.publicKeyFromPem(pubkey);
-        const encrypted = rsa.encrypt(sig?.address?.toLowerCase(), "RSA-OAEP");
-        let encrypted_data = forge.util.encode64(encrypted);
-        sig = {
-          address:sig?.address,
-          signature:encrypted_data,
-          message:encrypted_data,
-          issmart:true
+          const rsa = forge.pki.publicKeyFromPem(pubkey);
+          const encrypted = rsa.encrypt(
+            sig?.address?.toLowerCase(),
+            "RSA-OAEP"
+          );
+          let encrypted_data = forge.util.encode64(encrypted);
+          sig = {
+            address: sig?.address,
+            signature: encrypted_data,
+            message: encrypted_data,
+            issmart: true,
+          };
+        } else {
+          sig.issmart = false;
         }
-        }
-        else {
-          sig.issmart = false
-        }
+        console.log("my sig", sig)
         LocalStorage &&
           setWithExpiry(`sig-${account.toLowerCase()}`, sig, 43200000);
         resolve(sig);
@@ -182,7 +185,7 @@ export const ConnectWalletButton = ({
                 SignatureMessage.address ? account.toString().toLowerCase() : ""
               }${SignatureMessage.timestamp ? "ts-" + Date.now() : ""}`.trim(),
               LocalStorage,
-              provider.isCoinbaseWallet || provider?.provider?.isCoinbaseWallet
+              false
             )
               .then((key) => {
                 setKeyValue(key as any);
@@ -204,14 +207,7 @@ export const ConnectWalletButton = ({
           (chain) => chain?.chainId == network.chainId
         ).length
       ) {
-        if (provider.isCoinbaseWallet || provider?.provider?.isCoinbaseWallet) {
-          setKeyValue({ address: account });
-          setTimeout(() => {
-            signFunction();
-          }, 2000);
-        } else {
-          signFunction();
-        }
+        signFunction();
       } else {
         alert(NetworkAlertMessage);
         deactivate();
