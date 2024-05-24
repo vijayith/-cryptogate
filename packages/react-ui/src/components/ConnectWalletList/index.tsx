@@ -69,9 +69,9 @@ export const ConnectWalletList = ({
           {solConfig?.wallets && (
             <SolWalletListComp wallets={solConfig.wallets} closeWallet={handleWalletClick} />
           )}
-          {/* {suiConfig?.wallets && (
+          {suiConfig?.wallets && (
             <SuiWalletListComp wallets={suiConfig.wallets} closeWallet={handleWalletClick} />
-          )} */}
+          )}
         </div>
         <div
           style={{

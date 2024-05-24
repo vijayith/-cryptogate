@@ -25,7 +25,7 @@ const SuiWalletListComp = ({ wallets, closeWallet }: { wallets: SuiWallets[]; cl
           />
         )}
 
-      {(wallets.indexOf(SuiWallets.ALL) > -1 ||
+      {/* {(wallets.indexOf(SuiWallets.ALL) > -1 ||
         wallets.indexOf(SuiWallets.SUI) > -1) && (
           <WalletListing
             heading="Sui Wallet"
@@ -35,7 +35,7 @@ const SuiWalletListComp = ({ wallets, closeWallet }: { wallets: SuiWallets[]; cl
               closeWallet();
             }}
           />
-        )}
+        )} */}
 
       {(wallets.indexOf(SuiWallets.ALL) > -1 ||
         wallets.indexOf(SuiWallets.ETHOS) > -1) && (
