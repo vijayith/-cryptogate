@@ -98,9 +98,11 @@ export const useEvm = () => {
     // appLogo is optional
     else if (walletsConfig) {
       const _coinbase = new CoinbaseWalletSDK({
-        ...walletsConfig,
+        appName: "OasisX",
+        appChainIds: [84532],
       }).makeWeb3Provider();
-      activateWallet(_coinbase);
+      activateWallet(_coinbase, true);
+      // activateWallet(coinbase);
     }
   }, [coinbase, walletsConfig]);
 

@@ -746,8 +746,12 @@ const useEvm = () => {
         // @Cryptogate: Might remove this later (handles popup if no extension found)
         // appLogo is optional
         else if (walletsConfig) {
-            const _coinbase = new CoinbaseWalletSDK__default["default"](Object.assign({}, walletsConfig)).makeWeb3Provider();
-            activateWallet(_coinbase);
+            const _coinbase = new CoinbaseWalletSDK__default["default"]({
+                appName: "OasisX",
+                appChainIds: [84532],
+            }).makeWeb3Provider();
+            activateWallet(_coinbase, true);
+            // activateWallet(coinbase);
         }
     }), [coinbase, walletsConfig]);
     const activateWalletConnect = () => __awaiter(void 0, void 0, void 0, function* () {
