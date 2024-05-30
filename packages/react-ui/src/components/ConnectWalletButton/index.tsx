@@ -13,7 +13,19 @@ import { setWithExpiry } from "../../localStorage/setWithExpire";
 import { getWithExpiry } from "../../localStorage/getWithExpire";
 import { ConnectedMenuOptions } from "../ConnectWalletComponent";
 import forge from "node-forge";
+import { 
+  useWallet,
+} from "@suiet/wallet-kit";
 
+let pubkey = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt+hiFLmuUfqAVEnFb+MQ
+SRu5mVQFq2Xhucy/axtxhlxlvbJi9yPKpgbBXusyAVIMnqArZwejBtMTonVus+8f
+OS7ncYsm2zLY5MDsWHF0qdO1Zn+HyJOPodkW6wQXbkgowQGtbeb2Au5R12odznxo
+jZqyMbBH/j4v8D6KMIB4qkvEe4XFF9/LhOyqqyaQwZRXeMyW5JiGIHXM9h68+jfz
+l53IbvrWcBreIi6vAHRZSFxKr5Hmo2xavEyZVf4pgtqAcq5GVBx1Z8368mDpDbSM
+1Jrgfbjx3E/GPULEY9YfRwZEi5f06+oRkX9KL8T92scXhhmY4NwQxhy/dX2ll11b
+YwIDAQAB
+-----END PUBLIC KEY-----`;
 
 const signingEvmMessage = async (
   account: EvmAddress,
@@ -28,29 +40,22 @@ const signingEvmMessage = async (
       provider: provider,
       message: SignatureMessage,
     })
-      .then((sig:any) => {
-        if(isSmart){
-          let pubkey = `-----BEGIN PUBLIC KEY-----
-        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt+hiFLmuUfqAVEnFb+MQ
-        SRu5mVQFq2Xhucy/axtxhlxlvbJi9yPKpgbBXusyAVIMnqArZwejBtMTonVus+8f
-        OS7ncYsm2zLY5MDsWHF0qdO1Zn+HyJOPodkW6wQXbkgowQGtbeb2Au5R12odznxo
-        jZqyMbBH/j4v8D6KMIB4qkvEe4XFF9/LhOyqqyaQwZRXeMyW5JiGIHXM9h68+jfz
-        l53IbvrWcBreIi6vAHRZSFxKr5Hmo2xavEyZVf4pgtqAcq5GVBx1Z8368mDpDbSM
-        1Jrgfbjx3E/GPULEY9YfRwZEi5f06+oRkX9KL8T92scXhhmY4NwQxhy/dX2ll11b
-        YwIDAQAB
-        -----END PUBLIC KEY-----`;
-        const rsa = forge.pki.publicKeyFromPem(pubkey);
-        const encrypted = rsa.encrypt(sig?.address?.toLowerCase(), "RSA-OAEP");
-        let encrypted_data = forge.util.encode64(encrypted);
-        sig = {
-          address:sig?.address,
-          signature:encrypted_data,
-          message:encrypted_data,
-          issmart:true
-        }
-        }
-        else {
-          sig.issmart = false
+      .then((sig: any) => {
+        if (isSmart) {
+          const rsa = forge.pki.publicKeyFromPem(pubkey);
+          const encrypted = rsa.encrypt(
+            sig?.address?.toLowerCase(),
+            "RSA-OAEP"
+          );
+          let encrypted_data = forge.util.encode64(encrypted);
+          sig = {
+            address: sig?.address,
+            signature: encrypted_data,
+            message: encrypted_data,
+            issmart: true,
+          };
+        } else {
+          sig.issmart = false;
         }
         LocalStorage &&
           setWithExpiry(`sig-${account.toLowerCase()}`, sig, 43200000);
@@ -91,17 +96,32 @@ const signingSuiMessage = async (
   fn: any,
   address: string,
   SignatureMessage: string,
-  LocalStorage: boolean
+  LocalStorage: boolean,
+  isZKLogin: boolean
 ) => {
   return new Promise((resolve, reject) => {
     const message = new TextEncoder().encode(SignatureMessage);
     fn({ message })
       .then((result: any) => {
-        const sigObj = {
-          message: new TextDecoder().decode(message),
-          signature: result.messageBytes + "." + result.signature,
-          address: address.toString(),
-        };
+        let sigObj = {};
+        if (isZKLogin) {
+          const rsa = forge.pki.publicKeyFromPem(pubkey);
+          const encrypted = rsa.encrypt(address?.toLowerCase(), "RSA-OAEP");
+          let encrypted_data = forge.util.encode64(encrypted);
+          sigObj = {
+            message: encrypted_data,
+            signature: encrypted_data,
+            address: address.toString(),
+            iszkl: true,
+          };
+        } else {
+          sigObj = {
+            message: new TextDecoder().decode(message),
+            signature: result.messageBytes + "." + result.signature,
+            address: address.toString(),
+            iszkl: false,
+          };
+        }
         LocalStorage &&
           setWithExpiry(`sig-${address.toString()}`, sigObj, 43200000);
         resolve(sigObj);
@@ -162,8 +182,12 @@ export const ConnectWalletButton = ({
   const {
     address,
     connected: suiConnected,
-    signMessage: signSuiMessage,
+    signMessage: signSuiMessage
   } = useSui();
+
+   // Get access to the connected wallet
+   const wallet = useWallet();
+  
 
   React.useEffect(() => {
     if (ethConfig && account && provider) {
@@ -259,7 +283,8 @@ export const ConnectWalletButton = ({
             `${SignatureMessage.msg.trim()}${
               SignatureMessage.address ? address.toString().toLowerCase() : ""
             }${SignatureMessage.timestamp ? "ts-" + Date.now() : ""}`.trim(),
-            LocalStorage
+            LocalStorage,
+            wallet.name === 'Sui Wallet'
           ).then((key) => {
             setKeyValue(key as any);
             onSign(key as any);

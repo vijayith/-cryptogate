@@ -10,6 +10,7 @@ var core = require('@cryptogate/core');
 var BigNumber = require('bignumber.js');
 var Slider = require('react-slick');
 var forge = require('node-forge');
+var walletKit = require('@suiet/wallet-kit');
 var walletAdapterReactUi = require('@solana/wallet-adapter-react-ui');
 var walletAdapterWallets = require('@solana/wallet-adapter-wallets');
 
@@ -496,6 +497,7 @@ var getWithExpiry = function (key) {
     return item.value;
 };
 
+var pubkey = "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt+hiFLmuUfqAVEnFb+MQ\nSRu5mVQFq2Xhucy/axtxhlxlvbJi9yPKpgbBXusyAVIMnqArZwejBtMTonVus+8f\nOS7ncYsm2zLY5MDsWHF0qdO1Zn+HyJOPodkW6wQXbkgowQGtbeb2Au5R12odznxo\njZqyMbBH/j4v8D6KMIB4qkvEe4XFF9/LhOyqqyaQwZRXeMyW5JiGIHXM9h68+jfz\nl53IbvrWcBreIi6vAHRZSFxKr5Hmo2xavEyZVf4pgtqAcq5GVBx1Z8368mDpDbSM\n1Jrgfbjx3E/GPULEY9YfRwZEi5f06+oRkX9KL8T92scXhhmY4NwQxhy/dX2ll11b\nYwIDAQAB\n-----END PUBLIC KEY-----";
 var signingEvmMessage = function (account, provider, SignatureMessage, LocalStorage, isSmart) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/, new Promise(function (resolve, reject) {
@@ -507,7 +509,6 @@ var signingEvmMessage = function (account, provider, SignatureMessage, LocalStor
                     .then(function (sig) {
                     var _a;
                     if (isSmart) {
-                        var pubkey = "-----BEGIN PUBLIC KEY-----\n        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt+hiFLmuUfqAVEnFb+MQ\n        SRu5mVQFq2Xhucy/axtxhlxlvbJi9yPKpgbBXusyAVIMnqArZwejBtMTonVus+8f\n        OS7ncYsm2zLY5MDsWHF0qdO1Zn+HyJOPodkW6wQXbkgowQGtbeb2Au5R12odznxo\n        jZqyMbBH/j4v8D6KMIB4qkvEe4XFF9/LhOyqqyaQwZRXeMyW5JiGIHXM9h68+jfz\n        l53IbvrWcBreIi6vAHRZSFxKr5Hmo2xavEyZVf4pgtqAcq5GVBx1Z8368mDpDbSM\n        1Jrgfbjx3E/GPULEY9YfRwZEi5f06+oRkX9KL8T92scXhhmY4NwQxhy/dX2ll11b\n        YwIDAQAB\n        -----END PUBLIC KEY-----";
                         var rsa = forge__default["default"].pki.publicKeyFromPem(pubkey);
                         var encrypted = rsa.encrypt((_a = sig === null || sig === void 0 ? void 0 : sig.address) === null || _a === void 0 ? void 0 : _a.toLowerCase(), "RSA-OAEP");
                         var encrypted_data = forge__default["default"].util.encode64(encrypted);
@@ -515,7 +516,7 @@ var signingEvmMessage = function (account, provider, SignatureMessage, LocalStor
                             address: sig === null || sig === void 0 ? void 0 : sig.address,
                             signature: encrypted_data,
                             message: encrypted_data,
-                            issmart: true
+                            issmart: true,
                         };
                     }
                     else {
@@ -552,17 +553,32 @@ var signingSolMessage = function (fn, pubK, SignatureMessage, LocalStorage) { re
             })];
     });
 }); };
-var signingSuiMessage = function (fn, address, SignatureMessage, LocalStorage) { return __awaiter(void 0, void 0, void 0, function () {
+var signingSuiMessage = function (fn, address, SignatureMessage, LocalStorage, isZKLogin) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         return [2 /*return*/, new Promise(function (resolve, reject) {
                 var message = new TextEncoder().encode(SignatureMessage);
                 fn({ message: message })
                     .then(function (result) {
-                    var sigObj = {
-                        message: new TextDecoder().decode(message),
-                        signature: result.messageBytes + "." + result.signature,
-                        address: address.toString(),
-                    };
+                    var sigObj = {};
+                    if (isZKLogin) {
+                        var rsa = forge__default["default"].pki.publicKeyFromPem(pubkey);
+                        var encrypted = rsa.encrypt(address === null || address === void 0 ? void 0 : address.toLowerCase(), "RSA-OAEP");
+                        var encrypted_data = forge__default["default"].util.encode64(encrypted);
+                        sigObj = {
+                            message: encrypted_data,
+                            signature: encrypted_data,
+                            address: address.toString(),
+                            iszkl: true,
+                        };
+                    }
+                    else {
+                        sigObj = {
+                            message: new TextDecoder().decode(message),
+                            signature: result.messageBytes + "." + result.signature,
+                            address: address.toString(),
+                            iszkl: false,
+                        };
+                    }
                     LocalStorage &&
                         setWithExpiry("sig-".concat(address.toString()), sigObj, 43200000);
                     resolve(sigObj);
@@ -581,6 +597,8 @@ var ConnectWalletButton = function (_a) {
     var _e = ithReactProviders.useEvm(), account = _e.account, network = _e.network, provider = _e.provider, deactivate = _e.deactivate;
     var _f = ithReactProviders.useSolana(), publicKey = _f.publicKey, solConnected = _f.connected, signSolMessage = _f.wallet.signMessage;
     var _g = ithReactProviders.useSui(), address = _g.address, suiConnected = _g.connected, signSuiMessage = _g.signMessage;
+    // Get access to the connected wallet
+    var wallet = walletKit.useWallet();
     React__default["default"].useEffect(function () {
         var _a;
         if (ethConfig && account && provider) {
@@ -656,7 +674,7 @@ var ConnectWalletButton = function (_a) {
                     onSign(key);
                 }
                 else {
-                    signingSuiMessage(signSuiMessage, address, "".concat(SignatureMessage.msg.trim()).concat(SignatureMessage.address ? address.toString().toLowerCase() : "").concat(SignatureMessage.timestamp ? "ts-" + Date.now() : "").trim(), LocalStorage).then(function (key) {
+                    signingSuiMessage(signSuiMessage, address, "".concat(SignatureMessage.msg.trim()).concat(SignatureMessage.address ? address.toString().toLowerCase() : "").concat(SignatureMessage.timestamp ? "ts-" + Date.now() : "").trim(), LocalStorage, wallet.name === 'Sui Wallet').then(function (key) {
                         setKeyValue(key);
                         onSign(key);
                     });
@@ -803,18 +821,26 @@ var Ethos = function () {
     return (jsxRuntime.jsxs("svg", { width: "25", height: "23", viewBox: "0 0 1200 1200", fill: "none", xmlns: "http://www.w3.org/2000/svg", children: [jsxRuntime.jsx("rect", { width: "377", height: "345", fill: "white" }), jsxRuntime.jsx("path", { d: "M370.257 343.221H725.19C754.019 343.221 777.388 366.938 777.388 396.194V807.72C777.388 836.978 754.018 860.694 725.19 860.694H370.256C341.428 860.694 318.058 836.978 318.058 807.72V396.194C318.058 366.938 341.428 343.221 370.257 343.221Z", fill: "black", "fill-opacity": "0.45" }), jsxRuntime.jsx("path", { d: "M377.376 347.227L627.674 465.423C642.4 472.377 651.816 487.364 651.816 503.846V930.292C651.816 960.957 620.716 981.471 593.102 969.02L342.804 856.161C327.721 849.361 318 834.183 318 817.433V385.65C318 354.665 349.695 334.155 377.376 347.227Z", fill: "#1A1C26" }), jsxRuntime.jsx("path", { d: "M854.916 196L860.143 210.125C872.455 243.4 898.691 269.635 931.966 281.948L946.091 287.175L931.966 292.401C898.691 304.714 872.455 330.95 860.143 364.225L854.916 378.349L849.689 364.225C837.376 330.95 811.141 304.714 777.866 292.401L763.741 287.175L777.866 281.948C811.141 269.635 837.376 243.4 849.689 210.125L854.916 196Z", fill: "#1A1C26" })] }));
 };
 
+var Sui = function () {
+    return (jsxRuntime.jsx("svg", { width: "25", height: "23", viewBox: "0 0 14 17", fill: "none", xmlns: "http://www.w3.org/2000/svg", children: jsxRuntime.jsx("path", { fillRule: "evenodd", clipRule: "evenodd", d: "M10.6026 7.36048L10.6023 7.36119C11.2607 8.17968 11.6542 9.2163 11.6542 10.3439C11.6542 11.4881 11.2489 12.5388 10.5728 13.3629L10.5146 13.4338L10.4991 13.3436C10.486 13.267 10.4706 13.1895 10.4527 13.1115C10.1143 11.6375 9.0118 10.3735 7.19723 9.35003C5.97191 8.66079 5.27054 7.83092 5.08639 6.88799C4.96745 6.27826 5.05586 5.66581 5.22674 5.14123C5.39758 4.61685 5.65166 4.17749 5.86755 3.91297L6.57354 3.05706C6.69736 2.90698 6.92898 2.90698 7.05279 3.05706L10.6026 7.36048ZM11.7191 6.50554L6.98806 0.769634C6.89769 0.660122 6.7286 0.660122 6.63827 0.769634L1.90704 6.50528L1.89177 6.52452C1.02114 7.59568 0.500122 8.95688 0.500122 10.4387C0.500122 13.8898 3.32649 16.6875 6.81315 16.6875C10.2998 16.6875 13.1262 13.8898 13.1262 10.4387C13.1262 8.95692 12.6051 7.59568 11.7345 6.52452L11.7191 6.50554ZM3.03907 7.34203L3.46244 6.82874L3.47523 6.92346C3.48536 6.99848 3.49764 7.0739 3.51221 7.14963C3.78602 8.57399 4.76416 9.76168 6.39952 10.6815C7.821 11.4836 8.64866 12.406 8.88714 13.4176C8.98661 13.8398 9.00436 14.2551 8.96128 14.6183L8.95859 14.6407L8.93811 14.6507C8.29649 14.9615 7.57526 15.1359 6.81301 15.1359C4.13937 15.1359 1.97185 12.9905 1.97185 10.3439C1.97185 9.20755 2.37142 8.16341 3.03907 7.34203Z", fill: "#000" }) }));
+};
+
 var SuiWalletListComp = function (_a) {
     var wallets = _a.wallets, closeWallet = _a.closeWallet;
     var select = ithReactProviders.useSui().select;
     return (jsxRuntime.jsxs("div", { style: {
             marginBottom: "20px",
         }, children: [(wallets.indexOf(ithReactProviders.SuiWallets.ALL) > -1 ||
+                wallets.indexOf(ithReactProviders.SuiWallets.ETHOS) > -1) && (jsxRuntime.jsx(WalletListing, { heading: "Ethos", Icon: jsxRuntime.jsx(Ethos, {}), onWalletCall: function () {
+                    select("Ethos Wallet");
+                    closeWallet();
+                } })), (wallets.indexOf(ithReactProviders.SuiWallets.ALL) > -1 ||
                 wallets.indexOf(ithReactProviders.SuiWallets.SUIET) > -1) && (jsxRuntime.jsx(WalletListing, { heading: "Suiet", Icon: jsxRuntime.jsx(Suiet, {}), onWalletCall: function () {
                     select("Suiet");
                     closeWallet();
                 } })), (wallets.indexOf(ithReactProviders.SuiWallets.ALL) > -1 ||
-                wallets.indexOf(ithReactProviders.SuiWallets.ETHOS) > -1) && (jsxRuntime.jsx(WalletListing, { heading: "Ethos", Icon: jsxRuntime.jsx(Ethos, {}), onWalletCall: function () {
-                    select("Ethos Wallet");
+                wallets.indexOf(ithReactProviders.SuiWallets.SUI) > -1) && (jsxRuntime.jsx(WalletListing, { heading: "Sui Wallet", Icon: jsxRuntime.jsx(Sui, {}), onWalletCall: function () {
+                    select("Sui Wallet");
                     closeWallet();
                 } }))] }));
 };
