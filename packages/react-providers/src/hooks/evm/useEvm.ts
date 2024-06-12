@@ -53,14 +53,15 @@ export const useEvm = () => {
     setWalletData({ account: _account });
     setNetworkData({ chainId: _chainId, chain: getChainById(_chainId) });
     provider?.removeAllListeners();
-    _provider && setProvider(new ethers.providers.Web3Provider(_provider));
+    _provider && setProvider(new ethers.providers.Web3Provider(_provider,'any'));
   };
 
   const activateWallet = async (_provider: any, isCOinbase?: boolean) => {
     try {
       if (isCOinbase) {
         const res = await _provider.request({
-          method: "eth_requestAccounts", // Pass method as a property of an object
+          method: "eth_requestAccounts", // Pass method as a property of an object,
+          
         });
 
         let chainIdRes = await _provider.request({ method: "eth_chainId" });
@@ -99,7 +100,8 @@ export const useEvm = () => {
     else if (walletsConfig) {
       const _coinbase = new CoinbaseWalletSDK({
         appName: "OasisX",
-        appChainIds: [84532],
+        appChainIds: [8453, 84532,11155111,1,137],
+      
       }).makeWeb3Provider();
       activateWallet(_coinbase, true);
       // activateWallet(coinbase);
@@ -115,7 +117,7 @@ export const useEvm = () => {
     });
 
     provider.on("connect", () =>
-      setProvider(new ethers.providers.Web3Provider(provider))
+      setProvider(new ethers.providers.Web3Provider(provider,'any'))
     );
 
     provider.on("accountsChanged", (accounts: string[]) => {
